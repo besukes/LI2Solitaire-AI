@@ -1,8 +1,13 @@
 #include <dirent.h>
+#include "main.h"
 //ver dirent
 //fgets
 
-int main(void){
+GameSettings initStructs(void){
     
+}
 
+int main(void){
+    GameSettings currentGame = initStructs();
+    readfiles();
 }
