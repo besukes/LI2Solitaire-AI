@@ -1,7 +1,18 @@
 typedef enum Boolean {falso,verdade} Boolean ;
 
-typedef struct PilhasStruct{
+typedef struct TipoMovimento{
+    char * pilhaOrig;
+    char * pilhaDest;
+    int * (* flagsPilha);
+    int numFlags;
+}TipoMovimento;
 
+typedef struct PilhasStruct{
+    char * nomePilha;
+    int numPilhas;
+    int * pilhas;
+    int * numCartasPilha;
+    TipoMovimento * movimentoPilha;
 }PilhasStruct;
 
 typedef struct JogoStruct{
