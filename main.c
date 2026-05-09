@@ -1,13 +1,12 @@
 #include <dirent.h>
+#include <stdlib.h>
 #include "main.h"
 //ver dirent
 //fgets
 
-GameSettings initStructs(void){
-    
-}
 
 int main(void){
-    GameSettings currentGame = initStructs();
-    readfiles();
+    // seria mais eficiente utilizar ponteiros de memoria inves de copiar memoria, mas assim poupa se instrucoes
+    GameSettings currentGame=initStructs();
+    readfiles(&currentGame);
 }

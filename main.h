@@ -1,29 +1,32 @@
 typedef enum Boolean {falso,verdade} Boolean ;
 
 typedef struct TipoMovimento{
-    char * pilhaOrig;
-    char * pilhaDest;
-    int * (* flagsPilha);
-    int numFlags;
+    char * pilhaOrig; //Pilha de onde vêm as cartas
+    char * pilhaDest; //Pilha onde vao parar as cartas
+    int numFlags; //Num de Flags totais de uma dada pilha
+    //array de 20 funcoes que recebem dois inteiros e devolvem um inteiro
+    int (* flagsPilha[20])(int,int);
 }TipoMovimento;
 
+
 typedef struct PilhasStruct{
-    char * nomePilha;
     int numPilhas;
-    int * pilhas;
-    int * numCartasPilha;
-    TipoMovimento * movimentoPilha;
+    TipoMovimento movimentoPilhas[];
 }PilhasStruct;
+
 
 typedef struct JogoStruct{
     char * nomeJogo;
     int numPilhas;
-    PilhasStruct * pilhas;
+    PilhasStruct pilhas;
 }JogoStruct;
 
-typedef struct WinCondition{
 
+typedef struct WinCondition{
+    char * pilhaDescrita;
+    int numeroVitoriaPilha;
 }WinCondition;
+
 
 typedef struct OrdemFicheiro{
     int tamanho;
@@ -32,8 +35,16 @@ typedef struct OrdemFicheiro{
 
 
 typedef struct game{
-    int numBaralhos;
     OrdemFicheiro file;
+    int numBaralhos;
     JogoStruct jogo;
-    WinCondition winCon;
+    int numCondicoesVitoria;
+    WinCondition winCon[];
 }GameSettings;
+
+
+//Modulo structFunctions.c
+GameSettings initStructs(void);
+
+//Modulo readFiles.c
+void readFiles(GameSettings * gs);
