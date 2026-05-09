@@ -6,7 +6,7 @@
 
 
 int main(void){
-    // seria mais eficiente utilizar ponteiros de memoria inves de copiar memoria, mas assim poupa se instrucoes
+    //Seria mais eficiente utilizar logo ponteiros de memoria inves de copiar memoria, mas assim poupa se instrucoes
     GameSettings currentGame=initStructs();
     readfiles(&currentGame);
 }
