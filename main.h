@@ -1,6 +1,7 @@
 
 typedef enum Boolean {falso,verdade} Boolean ;
 
+typedef char * String;
 
 ////////////////////////////////////////////////////////Structs sobre Pilhas ///////////////////////////////////////////////
 typedef struct TipoMovimento{
@@ -55,4 +56,4 @@ typedef struct game{
 GameSettings initStructs(void);
 
 //Modulo readFiles.c
-void readFiles(GameSettings * gs);
+int readFiles(GameSettings * gs,String str);
