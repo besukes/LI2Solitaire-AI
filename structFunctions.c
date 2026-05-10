@@ -4,6 +4,9 @@
 void initJogoStruct(GameSettings * gs){
     (gs->jogo).nomeJogo=NULL;
     (gs->jogo).numPilhas=0;
+    (gs->jogo).numCondicoes=0;
+    (gs->jogo).movimentoPilhas=NULL;
+    (gs->jogo).pilhas=NULL;
 }
 
 void initFileStruct(GameSettings * gs){

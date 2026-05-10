@@ -8,15 +8,17 @@
 void winInstruction(GameSettings * gs , char * line){
     gs->numCondicoesVitoria++;
     gs->winCon = realloc(gs->winCon,sizeof(WinCondition)*gs->numCondicoesVitoria);
-    int tag=0,num=0,i=0;
-    while(*line !=' '){
-        tag+=*line;
-        line++;
+    int tag = 0,num = 0,i = 0,j = 0;
+    char * temp = line ;
+    while(*temp !=' '){
+        tag+=(*temp)*exp(2,j++); // Multiplicamos por 2^j para cada tag ser unica
+        temp++;
     }
     while(*line != '#' && *line!='\n' && *line!=' '){
         num = (*line-48)*exp(10,i++);
+        line++;
     }
-    (gs->winCon + gs->numCondicoesVitoria)->tagPilha = tag;
+    (gs->winCon + gs->numCondicoesVitoria)->tagPilha = tag; 
     (gs->winCon + gs->numCondicoesVitoria)->numeroVitoriaPilha = num;
 }
 
