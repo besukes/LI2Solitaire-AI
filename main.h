@@ -16,13 +16,14 @@ typedef struct MovimentoEntrePilhas{
 typedef struct RegrasPilha{
     Boolean pilhaVisivel;
     Boolean cartaTopoVisivel;
+    Boolean maxCartas;
     int numMaxCartas;
 }RegrasPilha;
 
 typedef struct PilhasStruct{
     int tag; //tag da pilha dada pela soma dos caracteres ASCII
-    int indicePilha; //Pilha de onde vêm as cartas (0 ate numPilhas-1) 
-    //se a pilha nao for visivel toma o valor numPilhas-1 , e altera os outros indices
+    int indicePilha; //Pilha de onde vêm as cartas (0 ate numPilhas-1)
+    int numCartasInicial; // Num de cartas com que a pilha inicia
     RegrasPilha rules;
 }PilhasStruct;
 

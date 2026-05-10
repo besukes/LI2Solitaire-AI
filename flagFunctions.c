@@ -7,7 +7,8 @@ int valorCarta(int c){
 }
 
 
-int ultimaCartaPegavel(int pilha,GameSettings * gs,int l,int c,int matrizJogo[l][c]){
+
+int ultimaCartaPegavel(int pilha,GameSettings * gs,int l,int c){
     
 }
 
