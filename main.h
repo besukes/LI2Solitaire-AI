@@ -1,9 +1,10 @@
-
-typedef enum Boolean {falso,verdade} Boolean ;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////Typedefs e structs utilizados///////////////////////////////////////////////////
+typedef int Boolean ;
 
 typedef char * String;
 
-////////////////////////////////////////////////////////Structs sobre Pilhas ///////////////////////////////////////////////
+
 typedef struct MovimentoEntrePilhas{
     int tagOrig; //Pilha de onde vem cas cartas
     int tagDest; //Pilha onde vao parar as cartas
@@ -14,10 +15,9 @@ typedef struct MovimentoEntrePilhas{
 }MovimentoEntrePilhas;
 
 typedef struct RegrasPilha{
-    Boolean pilhaVisivel;
+    Boolean todaPilhaVisivel;
     Boolean cartaTopoVisivel;
-    Boolean maxCartas;
-    int numMaxCartas;
+    Boolean existeMaxCartas; // MAX cartas 1
 }RegrasPilha;
 
 typedef struct PilhasStruct{
@@ -27,14 +27,24 @@ typedef struct PilhasStruct{
     RegrasPilha rules;
 }PilhasStruct;
 
+typedef struct AutoMoves{
+    int tagOrig;
+    int tagDest;
+    Boolean variasCartasMoviveis;
+    int numFlags;
+    int (* flagsMoves[19])(GameSettings *,int,int);
+}AutoMoves;
+
 typedef struct JogoStruct{
     String nomeJogo;
     int numPilhas;
     PilhasStruct * pilhas;
     int numCondicoes;
     MovimentoEntrePilhas * movimentoPilhas;
+    int qntdAutoMoves;
+    AutoMoves * autoMoves;
 }JogoStruct;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 typedef struct WinCondition{
     int tagPilha;
@@ -55,6 +65,9 @@ typedef struct game{
 }GameSettings;
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////Definições de algumas funções de vários módulos/////////////////////////////////////////
+
 //Modulo structFunctions.c
 GameSettings initStructs(void);
 
@@ -63,5 +76,9 @@ int readFiles(GameSettings * gs,String str);
 
 //Modulo simpleFunctions.c
 int exp(int base,int expo);
+char * criarTag(int * tag,char * line);
+int strToNumber(char * line);
+void calculaRulesPilha(RegrasPilha * rp , char * line);
+void calculaAutoFlags(AutoMoves * am , char * line);
 
 //Modulo flagFunctions.c

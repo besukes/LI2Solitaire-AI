@@ -3,6 +3,28 @@
 #include <stdio.h>
 #include <string.h>
 
+void autoInstruction(GameSettings * gs , char * line){
+    int n = ++(gs->jogo.qntdAutoMoves);
+    gs->jogo.autoMoves = realloc(gs->jogo.autoMoves,sizeof(AutoMoves)*n);
+    int tagOrig=0,tagDest=0;
+    line=criarTag(&tagOrig,line);
+    line=criarTag(&tagDest,line);
+    AutoMoves * am = gs->jogo.autoMoves + n - 1;
+    am->tagOrig = tagOrig;
+    am->tagDest = tagDest;
+    calculaAutoFlags(am,line);
+}
+
+void tipoInstruction(GameSettings * gs , char * line){
+    int n = ++gs->jogo.numPilhas;
+    gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(PilhasStruct)*n);
+    int tag=0;
+    line = criarTag(&tag,line);
+    PilhasStruct * pilhaAtual = gs->jogo.pilhas + n - 1;
+    pilhaAtual->tag = tag;
+    calculaRulesPilha(&(pilhaAtual->rules),line);
+    pilhaAtual->indicePilha = n - 1;
+}
 
 void initInstruction(GameSettings * gs , char * line){
     int insTag=0,j=0;
@@ -56,6 +78,8 @@ void readInstructionLineAux(GameSettings * gs, char * line){
         break;
         case 'J' :
             jogoInstruction(gs,line+5);
+        break;
+        default: // Se a linha for vazia nao faz nada (i.e, comeca com espaco)
         break;
     }
 }

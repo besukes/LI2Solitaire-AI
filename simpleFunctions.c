@@ -26,9 +26,25 @@ int numCaracteres(char * line){
 
 int strToNumber(char * line){
     int i=numCaracteres(line) , num = 0;
-    while(*line != '#' && *line!='\n' && *line!=' '){
+    while(*line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
         num = (*line-48)*exp(10,i--);
         line++;
     }
     return num;
 }
+
+void calculaRulesPilha(RegrasPilha * rp , char * line){
+    rp->cartaTopoVisivel=0;
+    rp->existeMaxCartas=0;
+    rp->todaPilhaVisivel=0;
+    while(*line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
+        if(*line == '=') rp->todaPilhaVisivel = 1;
+        else if(*line == '^') rp->cartaTopoVisivel = 1;
+        else if(*line == '1') rp->existeMaxCartas = 1;
+    }
+}
+
+void calculaAutoFlags(AutoMoves * am , char * line){
+    
+}
+

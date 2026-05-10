@@ -21,4 +21,6 @@ GameSettings initStructs(void){
     initJogoStruct(&gs);
     gs.numCondicoesVitoria=0;
     gs.winCon = NULL;
+    gs.jogo.qntdAutoMoves = 0;
+    gs.jogo.autoMoves = NULL;
 }
