@@ -12,9 +12,10 @@ void initFileStruct(GameSettings * gs){
 }
 
 GameSettings initStructs(void){
-    GameSettings gs;
+    GameSettings gs ;
     initFileStruct(&gs);
     gs.numBaralhos=0;
     initJogoStruct(&gs);
     gs.numCondicoesVitoria=0;
+    gs.winCon = NULL;
 }

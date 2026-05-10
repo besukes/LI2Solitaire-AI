@@ -18,7 +18,8 @@ typedef struct RegrasPilha{
 }RegrasPilha;
 
 typedef struct PilhasStruct{
-    int pilhaOrig; //Pilha de onde vêm as cartas
+    int tag; //tag da pilha dada pela soma dos caracteres ASCII
+    int pilhaOrig; //Pilha de onde vêm as cartas 
     RegrasPilha rules;
     int numPilhas;
     TipoMovimento movimentoPilhas;
@@ -27,12 +28,12 @@ typedef struct PilhasStruct{
 typedef struct JogoStruct{
     char * nomeJogo;
     int numPilhas;
-    PilhasStruct pilhas[];
+    PilhasStruct * pilhas;
 }JogoStruct;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 typedef struct WinCondition{
-    int pilhaDescrita;
+    int tagPilha;
     int numeroVitoriaPilha;
 }WinCondition;
 
@@ -48,7 +49,7 @@ typedef struct game{
     int numBaralhos;
     JogoStruct jogo;
     int numCondicoesVitoria;
-    WinCondition winCon[];
+    WinCondition * winCon;
 }GameSettings;
 
 
@@ -57,3 +58,6 @@ GameSettings initStructs(void);
 
 //Modulo readFiles.c
 int readFiles(GameSettings * gs,String str);
+
+//Modulo simpleFunctions.c
+int exp(int base,int expo);

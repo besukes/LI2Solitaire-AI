@@ -5,6 +5,43 @@
 
 
 
+void winInstruction(GameSettings * gs , char * line){
+    gs->numCondicoesVitoria++;
+    gs->winCon = realloc(gs->winCon,sizeof(WinCondition)*gs->numCondicoesVitoria);
+    int tag=0,num=0,i=0;
+    while(*line !=' '){
+        tag+=*line;
+        line++;
+    }
+    while(*line != '#' && *line!='\n' && *line!=' '){
+        num = (*line-48)*exp(10,i++);
+    }
+    (gs->winCon + gs->numCondicoesVitoria)->tagPilha = tag;
+    (gs->winCon + gs->numCondicoesVitoria)->numeroVitoriaPilha = num;
+}
+
+
+void baralhoInstruction(GameSettings * gs , char * line){
+    int baralhos=0,i=0;
+    while(*line != '#' && *line!='\n' && *line!=' '){
+        baralhos = (*line-48)*exp(10,i++);
+    }
+    gs->numBaralhos=baralhos;
+}
+
+void jogoInstruction(GameSettings * gs,char * line){
+    int i;
+    char * temp = line;
+    //Para verificar o tamanho do nome do jogo
+    for(i=0;*temp != '#' && *temp!='\n' && *temp!=' ';i++,temp++);
+    gs->jogo.nomeJogo = malloc(sizeof(char)*i + 1);
+    char * nome = gs->jogo.nomeJogo;
+    for(;*line != '#' && *line!='\n' && *line!=' ';i++,nome++,line++){
+        *nome=*line;
+    }
+    *nome = '\0';
+}
+
 void readInstructionLine(GameSettings * gs , char * line){
     switch(*line){
         case 'M' :
@@ -18,6 +55,9 @@ void readInstructionLine(GameSettings * gs , char * line){
         break;
         case 'W' : 
             winInstruction(gs,line+4);
+        break;
+        case 'B' :
+            baralhoInstruction(gs,line+9);
         break;
         default : 
            jogoInstruction(gs,line+5);

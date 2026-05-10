@@ -4,7 +4,7 @@
 
 int main(int argc,char * argv[]){
     //Seria mais eficiente utilizar logo ponteiros de memoria inves de copiar memoria, mas assim poupa se instrucoes
-    GameSettings currentGame=initStructs();
+    GameSettings currentGame = initStructs();
     int success = readfiles(&currentGame,argv[1]);
     //Se houver erro com o ficheiro success estara em 1
     if(argc<2 || success){
