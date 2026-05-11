@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 int exp(int base,int expo){
     int ret=1;
@@ -42,6 +43,16 @@ void calculaRulesPilha(RegrasPilha * rp , char * line){
         else if(*line == '^') rp->cartaTopoVisivel = 1;
         else if(*line == '1') rp->existeMaxCartas = 1;
     }
+}
+MovimentoEntrePilhas * comparaTags (GameSettings *gs ,int tagOrig , int tagDest)
+{
+    for (int i = 0; i < gs->jogo.numCondicoes; i++) {
+        if (gs->jogo.movimentoPilhas[i].tagOrig == tagOrig && 
+            gs->jogo.movimentoPilhas[i].tagDest == tagDest) {
+            return &gs->jogo.movimentoPilhas[i];
+        }
+    }
+    return NULL;
 }
 
 void calculaAutoFlags(AutoMoves * am , char * line){

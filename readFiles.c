@@ -67,6 +67,26 @@ void jogoInstruction(GameSettings * gs,char * line){
     *nome = '\0';
 }
 
+void movInstruction(GameSettings * gs, char * line)
+{
+    char origemPilha [32] , destinoPilha[32] , flags[32];
+    //No futuro proximo o sscanf só vai ser usado para as flags
+    sscanf(line , "%s %s %s " , origemPilha, destinoPilha , flags);
+    int tagOrigem =0 , tagDestino = 0;
+    criarTag(&tagOrigem , origemPilha);
+    criarTag(&tagDestino , destinoPilha);
+    MovimentoEntrePilhas * existeregra = comparaTags(gs, tagOrigem, tagDestino);
+    if(existeregra == NULL)
+    {
+        gs->jogo.numCondicoes++;
+        gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas , sizeof(MovimentoEntrePilhas) * gs->jogo.numCondicoes);//Criar espaço
+        existeregra = &gs->jogo.movimentoPilhas[gs->jogo.numCondicoes -1];
+        existeregra->tagOrig = tagOrigem;
+        existeregra->tagDest = tagDestino;
+        existeregra->numFlags = 0;
+    }
+}
+
 
 void readInstructionLineAux(GameSettings * gs, char * line){
     switch(*line){
