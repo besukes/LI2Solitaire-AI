@@ -1,6 +1,16 @@
 #include "main.h"
 #include <stdlib.h>
 
+void inicializaAutoMoves(AutoMoves * am , int tagOrig , int tagDest){
+    am->tagOrig = tagOrig;
+    am->tagDest = tagDest;
+    am->arr->numFlagsColocavel=0;
+    am->arr->numFlagsPegavel=0;
+    am->numMovs=0;
+    am->variasCartasMoviveis=0;
+}
+
+
 void initJogoStruct(GameSettings * gs){
     (gs->jogo).nomeJogo=NULL;
     (gs->jogo).numPilhas=0;

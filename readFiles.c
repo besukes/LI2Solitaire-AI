@@ -3,33 +3,80 @@
 #include <stdio.h>
 #include <string.h>
 
+
+void addMovInstruction(MovimentoEntrePilhas * mov, long tagOrigem , long tagDestino , char * line){
+    mov->tagOrig = tagOrigem;
+    mov->tagDest = tagDestino;
+    int n = ++mov->numMovs;
+    mov->arr = realloc(mov->arr,sizeof(FlagFuncArray)*n);
+    FlagFuncArray * movAtual = (mov->arr) + n - 1;
+    movAtual->numFlagsPegavel = 0;
+    movAtual->numFlagsColocavel = 0;
+    mov->variasCartasMoviveis=0;
+    while(*line != '#' && *line!='\n' && *line!=' '){
+        FlagFunctionsP f = flagPegavelCalc(mov,line); //Caso a flag seja o "+" , altera o boolean do mov
+        if(f==NULL && *line != '+'){
+            movAtual->flagsColocavel[movAtual->numFlagsColocavel ++ ] = flagColocavelCalc(mov,line);
+        }
+        else movAtual->flagsPegavel[movAtual->numFlagsPegavel ++ ] = f;
+        line++;
+    }
+}
+
+void movInstruction(GameSettings * gs, char * line)
+{
+    long tagOrigem =0 , tagDestino = 0;
+    line = criarTag(&tagOrigem , line);
+    line = criarTag(&tagDestino , line);
+    //Agora line aponta para as flags
+    MovimentoEntrePilhas * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,gs->jogo.numCondicoes);
+    int n = ++gs->jogo.numCondicoes;
+    if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
+        gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas,sizeof(MovimentoEntrePilhas)*n);
+        gs->jogo.movimentoPilhas->numMovs = 0;
+        addMovInstruction(gs->jogo.movimentoPilhas + n - 1,tagOrigem,tagDestino,line);
+    }
+    else addMovInstruction(existeregra,tagOrigem,tagDestino,line);
+}
+
+void autoMovesCalc(AutoMoves * am , char * line){
+    
+}
+
 void autoInstruction(GameSettings * gs , char * line){
     int n = ++(gs->jogo.qntdAutoMoves);
-    gs->jogo.autoMoves = realloc(gs->jogo.autoMoves,sizeof(AutoMoves)*n);
-    int tagOrig=0,tagDest=0;
+    long tagOrig=0,tagDest=0;
     line=criarTag(&tagOrig,line);
     line=criarTag(&tagDest,line);
-    AutoMoves * am = gs->jogo.autoMoves + n - 1;
-    am->tagOrig = tagOrig;
-    am->tagDest = tagDest;
-    calculaAutoFlags(am,line);
+    AutoMoves * am = comparaTags(am,tagOrig,tagDest);
+    if(am==NULL){
+        gs->jogo.autoMoves = realloc(gs->jogo.autoMoves,sizeof(AutoMoves)*n);
+        am = gs->jogo.autoMoves + n -1;
+        inicializaAutoMoves(am,tagOrig,tagDest);
+    }
+    else{
+        am->numMovs++;
+        am->variasCartasMoviveis=0;
+    }
+    autoMovesCalc(am,line); // NECESSITO FAZER ESTA FUNCAO AINDA NAO ESTA FEITA
 }
 
 void tipoInstruction(GameSettings * gs , char * line){
     int n = ++gs->jogo.numPilhas;
     gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(PilhasStruct)*n);
-    int tag=0;
+    long tag=0;
     line = criarTag(&tag,line);
     PilhasStruct * pilhaAtual = gs->jogo.pilhas + n - 1;
     pilhaAtual->tag = tag;
     calculaRulesPilha(&(pilhaAtual->rules),line);
     pilhaAtual->indicePilha = n - 1;
+    pilhaAtual->numCartasInicial=0;
 }
 
 void initInstruction(GameSettings * gs , char * line){
-    int insTag=0,j=0;
-    line = criarTag(&insTag,line);
+    long insTag=0;
     int counter=0;
+    line = criarTag(&insTag,line);
     PilhasStruct * p = gs->jogo.pilhas;
     while(gs->jogo.numPilhas > counter && p->tag != insTag){
         counter++;
@@ -40,12 +87,14 @@ void initInstruction(GameSettings * gs , char * line){
 
 void winInstruction(GameSettings * gs , char * line){
     gs->numCondicoesVitoria++;
+    int n = gs->numCondicoesVitoria , num = 0;
     gs->winCon = realloc(gs->winCon,sizeof(WinCondition)*gs->numCondicoesVitoria);
-    int tag = 0,num=0;
+    long tag = 0;
     line = criarTag(&tag,line);
     num = strToNumber(line);
-    (gs->winCon + gs->numCondicoesVitoria - 1)->tagPilha = tag; 
-    (gs->winCon + gs->numCondicoesVitoria - 1)->numeroVitoriaPilha = num;
+    WinCondition * wn = gs->winCon ;
+    (wn + n - 1)->tagPilha = tag; 
+    (wn + n - 1)->numeroVitoriaPilha = num;
 }
 
 
@@ -65,24 +114,6 @@ void jogoInstruction(GameSettings * gs,char * line){
         *nome=*line;
     }
     *nome = '\0';
-}
-
-void movInstruction(GameSettings * gs, char * line)
-{
-    int tagOrigem =0 , tagDestino = 0;
-    line = criarTag(&tagOrigem , line);
-    line = criarTag(&tagDestino , line);
-    //Agora line aponta para as flags
-    MovimentoEntrePilhas * existeregra = comparaTags(gs, tagOrigem, tagDestino);
-    if(existeregra == NULL)
-    {
-        gs->jogo.numCondicoes++;
-        gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas , sizeof(MovimentoEntrePilhas) * gs->jogo.numCondicoes);//Criar espaço
-        existeregra = &gs->jogo.movimentoPilhas[gs->jogo.numCondicoes -1];
-        existeregra->tagOrig = tagOrigem;
-        existeregra->tagDest = tagDestino;
-        existeregra->numFlags = 0;
-    }
 }
 
 

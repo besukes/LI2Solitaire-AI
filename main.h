@@ -4,13 +4,31 @@ typedef int Boolean ;
 
 typedef char * String;
 
+typedef struct Carta{
+    int valor; // 1-13
+    char naipe; // C-Copas , E-Espadas , O-Ouro , P-Paus
+}Carta;
+
+typedef int (*FlagFunctionsP)(Carta,Carta);
+
+typedef int (*FlagFunctionsC) (Carta,Carta);
+
+
+
+typedef struct FlagFuncArray{
+    int numFlagsPegavel; //Num de Flags que indicam cartas que se podem pegar de uma dada pilha
+    FlagFunctionsP flagsPegavel[10];
+    int numFlagsColocavel; //Num de Flags que indicam cartas que se podem colocar numa dada pilha
+    FlagFunctionsC flagsColocavel[10];
+}FlagFuncArray;
+
 
 typedef struct MovimentoEntrePilhas{
-    int tagOrig; //Pilha de onde vem cas cartas
-    int tagDest; //Pilha onde vao parar as cartas
-    int numFlags; //Num de Flags totais de uma dada pilha
-    //array de 19 funcoes que recebem dois inteiros e as definicoes do Jogo e devolvem um inteiro
-    int (* flagsPilha[19])(GameSettings *,int,int);
+    long tagOrig; //Pilha de onde vem cas cartas
+    long tagDest; //Pilha onde vao parar as cartas
+    int numMovs; //Num de movs de pilhaOrig para pilhaDest
+    //Array de um struct que guarda o numero de funcoes de um dado movimento de pilhas
+    FlagFuncArray * arr;
     Boolean variasCartasMoviveis;
 }MovimentoEntrePilhas;
 
@@ -21,19 +39,13 @@ typedef struct RegrasPilha{
 }RegrasPilha;
 
 typedef struct PilhasStruct{
-    int tag; //tag da pilha dada pela soma dos caracteres ASCII
+    long tag; //tag da pilha dada pela soma dos caracteres ASCII
     int indicePilha; //Pilha de onde vêm as cartas (0 ate numPilhas-1)
     int numCartasInicial; // Num de cartas com que a pilha inicia
     RegrasPilha rules;
 }PilhasStruct;
 
-typedef struct AutoMoves{
-    int tagOrig;
-    int tagDest;
-    Boolean variasCartasMoviveis;
-    int numFlags;
-    int (* flagsMoves[19])(GameSettings *,int,int);
-}AutoMoves;
+typedef MovimentoEntrePilhas AutoMoves;
 
 typedef struct JogoStruct{
     String nomeJogo;
@@ -47,7 +59,7 @@ typedef struct JogoStruct{
 
 
 typedef struct WinCondition{
-    int tagPilha;
+    long tagPilha;
     int numeroVitoriaPilha;
 }WinCondition;
 
@@ -76,7 +88,7 @@ int readFiles(GameSettings * gs,String str);
 
 //Modulo simpleFunctions.c
 int exp(int base,int expo);
-char * criarTag(int * tag,char * line);
+char * criarTag(long * tag,char * line);
 int strToNumber(char * line);
 void calculaRulesPilha(RegrasPilha * rp , char * line);
 void calculaAutoFlags(AutoMoves * am , char * line);

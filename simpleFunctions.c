@@ -1,6 +1,12 @@
 #include "main.h"
 #include <stdio.h>
 
+
+int valorCarta(int c){
+    for(;c>13;c-=13);
+    return c;
+}
+
 int exp(int base,int expo){
     int ret=1;
     for(int i=0;i<expo;i++){
@@ -9,10 +15,11 @@ int exp(int base,int expo){
     return ret;
 }
 
-char * criarTag(int * tag,char * line){
+char * criarTag(long * tag,char * line){
     int j=0;
     while(*line != ' '){
-        *tag+=(*line)*exp(2,j++); // Multiplicamos por 2^j para cada tag ser unica
+        *tag+=(*line - 64)*exp(27,j++); //-64 por serem letras maisculas ('A' = 65)
+        // Multiplicamos por 27^j para cada tag ser unica (26 letras no alfabeto e apenas letras maiusculas)
         line++;
     }
     return (line+1);
@@ -44,18 +51,16 @@ void calculaRulesPilha(RegrasPilha * rp , char * line){
         else if(*line == '1') rp->existeMaxCartas = 1;
     }
 }
-MovimentoEntrePilhas * comparaTags (GameSettings *gs ,int tagOrig , int tagDest)
+
+
+MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,int tagOrig , int tagDest , int n)
 {
-    for (int i = 0; i < gs->jogo.numCondicoes; i++) {
-        if (gs->jogo.movimentoPilhas[i].tagOrig == tagOrig && 
-            gs->jogo.movimentoPilhas[i].tagDest == tagDest) {
-            return &gs->jogo.movimentoPilhas[i];
+    for (int i = 0; i < n; i++) {
+        if (mp[i].tagOrig == tagOrig && mp[i].tagDest == tagDest) {
+            return &mp[i];
         }
     }
     return NULL;
 }
 
-void calculaAutoFlags(AutoMoves * am , char * line){
-    
-}
 
