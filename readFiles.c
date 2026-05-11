@@ -69,12 +69,10 @@ void jogoInstruction(GameSettings * gs,char * line){
 
 void movInstruction(GameSettings * gs, char * line)
 {
-    char origemPilha [32] , destinoPilha[32] , flags[32];
-    //No futuro proximo o sscanf só vai ser usado para as flags
-    sscanf(line , "%s %s %s " , origemPilha, destinoPilha , flags);
     int tagOrigem =0 , tagDestino = 0;
-    criarTag(&tagOrigem , origemPilha);
-    criarTag(&tagDestino , destinoPilha);
+    line = criarTag(&tagOrigem , line);
+    line = criarTag(&tagDestino , line);
+    //Agora line aponta para as flags
     MovimentoEntrePilhas * existeregra = comparaTags(gs, tagOrigem, tagDestino);
     if(existeregra == NULL)
     {
