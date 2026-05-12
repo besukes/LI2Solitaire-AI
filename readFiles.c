@@ -4,21 +4,32 @@
 #include <string.h>
 
 
+void addMovInstructionAux(FlagFuncArray * arrFlags , char * line , FlagFunctionsC f){
+    if(f==NULL){ //Se a flag nao for sobre colocar cartas numa pilha , vemos se e de restricao
+        FlagFunctionsR f = flagRestricoesCalc(line);
+        if(f==NULL){ //Se a flag nao for de restricao , so pode ser a flag V de vazia
+            arrFlags->colocaEmPilhaVazia = &pilhaVazia;
+        }
+        else{
+            arrFlags->flagRestricoes[arrFlags->numRestricoes ++] = f;
+        }
+    }
+    else arrFlags->flagsColocavel[arrFlags->numFlagsColocavel ++ ] = f;
+}
+
 void addMovInstruction(MovimentoEntrePilhas * mov, long tagOrigem , long tagDestino , char * line){
     mov->tagOrig = tagOrigem;
     mov->tagDest = tagDestino;
     int n = ++mov->numMovs;
     mov->arr = realloc(mov->arr,sizeof(FlagFuncArray)*n);
-    FlagFuncArray * movAtual = (mov->arr) + n - 1;
-    movAtual->numFlagsPegavel = 0;
-    movAtual->numFlagsColocavel = 0;
-    mov->variasCartasMoviveis=0;
+    FlagFuncArray * arrFlags = (mov->arr) + n - 1;
+    initFlagFuncArray(arrFlags);
     while(*line != '#' && *line!='\n' && *line!=' '){
-        FlagFunctionsP f = flagPegavelCalc(mov,line); //Caso a flag seja o "+" , altera o boolean do mov
-        if(f==NULL && *line != '+'){
-            movAtual->flagsColocavel[movAtual->numFlagsColocavel ++ ] = flagColocavelCalc(mov,line);
+        FlagFunctionsP f = flagPegavelCalc(arrFlags,line); //Caso a flag seja o "+" , altera o boolean do mov
+        if(f==NULL && *line != '+'){ // Se a flag nao for de carta pegavel , entao vemos de que e
+            addMovInstructionAux(arrFlags,line,flagColocavelCalc(line));
         }
-        else movAtual->flagsPegavel[movAtual->numFlagsPegavel ++ ] = f;
+        else arrFlags->flagsPegavel[arrFlags->numFlagsPegavel ++ ] = f;
         line++;
     }
 }
@@ -28,37 +39,31 @@ void movInstruction(GameSettings * gs, char * line)
     long tagOrigem =0 , tagDestino = 0;
     line = criarTag(&tagOrigem , line);
     line = criarTag(&tagDestino , line);
-    //Agora line aponta para as flags
-    MovimentoEntrePilhas * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,gs->jogo.numCondicoes);
     int n = ++gs->jogo.numCondicoes;
+    //Agora line aponta para as flags
+    MovimentoEntrePilhas * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n);
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
         gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas,sizeof(MovimentoEntrePilhas)*n);
-        gs->jogo.movimentoPilhas->numMovs = 0;
-        addMovInstruction(gs->jogo.movimentoPilhas + n - 1,tagOrigem,tagDestino,line);
+        existeregra = gs->jogo.movimentoPilhas + n - 1;
+        existeregra->numMovs = 0;
     }
-    else addMovInstruction(existeregra,tagOrigem,tagDestino,line);
+    addMovInstruction(existeregra,tagOrigem,tagDestino,line);
 }
 
-void autoMovesCalc(AutoMoves * am , char * line){
-    
-}
-
-void autoInstruction(GameSettings * gs , char * line){
-    int n = ++(gs->jogo.qntdAutoMoves);
-    long tagOrig=0,tagDest=0;
-    line=criarTag(&tagOrig,line);
-    line=criarTag(&tagDest,line);
-    AutoMoves * am = comparaTags(am,tagOrig,tagDest);
-    if(am==NULL){
-        gs->jogo.autoMoves = realloc(gs->jogo.autoMoves,sizeof(AutoMoves)*n);
-        am = gs->jogo.autoMoves + n -1;
-        inicializaAutoMoves(am,tagOrig,tagDest);
+void autoInstruction(GameSettings * gs, char * line)
+{
+    long tagOrigem =0 , tagDestino = 0;
+    line = criarTag(&tagOrigem , line);
+    line = criarTag(&tagDestino , line);
+    int n = ++gs->jogo.qntdAutoMoves;
+    //Agora line aponta para as flags
+    AutoMoves * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n);
+    if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
+        gs->jogo.autoMoves = realloc(gs->jogo.movimentoPilhas,sizeof(MovimentoEntrePilhas)*n);
+        existeregra = gs->jogo.autoMoves + n - 1;
+        existeregra->numMovs = 0;
     }
-    else{
-        am->numMovs++;
-        am->variasCartasMoviveis=0;
-    }
-    autoMovesCalc(am,line); // NECESSITO FAZER ESTA FUNCAO AINDA NAO ESTA FEITA
+    addMovInstruction(existeregra,tagOrigem,tagDestino,line);
 }
 
 void tipoInstruction(GameSettings * gs , char * line){
@@ -69,20 +74,17 @@ void tipoInstruction(GameSettings * gs , char * line){
     PilhasStruct * pilhaAtual = gs->jogo.pilhas + n - 1;
     pilhaAtual->tag = tag;
     calculaRulesPilha(&(pilhaAtual->rules),line);
-    pilhaAtual->indicePilha = n - 1;
-    pilhaAtual->numCartasInicial=0;
 }
 
-void initInstruction(GameSettings * gs , char * line){
+void initInstruction(GameSettings * gs , char * line,MatrizJogo * mj){
     long insTag=0;
-    int counter=0;
-    line = criarTag(&insTag,line);
-    PilhasStruct * p = gs->jogo.pilhas;
-    while(gs->jogo.numPilhas > counter && p->tag != insTag){
-        counter++;
-        p++;
-    }
-    if(counter<gs->jogo.numPilhas) p->numCartasInicial = strToNumber(line);
+    int num = ++mj->numLinhasMatriz;
+    num = criarTag(&insTag,line);
+    mj->linhasMatriz = realloc(mj->linhasMatriz,sizeof(struct PilhaDeCartas)*num);
+    PilhaDeCartas * p = mj->linhasMatriz + num - 1;
+    p->tagPilha = insTag;
+    p->cartasPilha = NULL;
+    p->numCartasPilha = strToNumber(line);
 }
 
 void winInstruction(GameSettings * gs , char * line){
@@ -133,7 +135,7 @@ void readInstructionLineAux(GameSettings * gs, char * line){
     }
 }
 
-void readInstructionLine(GameSettings * gs , char * line){
+void readInstructionLine(GameSettings * gs , char * line,MatrizJogo * mj){
     switch(*line){
         case 'M' :
             movInstruction(gs,line+4);
@@ -145,31 +147,31 @@ void readInstructionLine(GameSettings * gs , char * line){
             tipoInstruction(gs,line+5);
         break;
         case 'I' :
-            initInstruction(gs,line+5);
+            initInstruction(gs,line+5,mj);
         default: // Apenas para reduzir instrucoes
             readInstructionLineAux(gs,line);
     }
 }
 
-void readInstructions(GameSettings * gs , struct dirent * entry){
+void readInstructions(GameSettings * gs , struct dirent * entry,MatrizJogo * mj){
     char path[100];
     snprintf(path,sizeof(path),"paciencias/%s",entry->d_name);
     FILE * file = fopen(path,"r");
     char line[50];
     while(fgets(line,sizeof(line),file)){
-        readInstructionLine(gs,line);
+        readInstructionLine(gs,line,mj);
     }
     fclose(file);
 }
 
-int readFiles(GameSettings * gs,String str){
+int readFiles(GameSettings * gs,String str,MatrizJogo * mj){
     struct dirent * entry;
     DIR * dir = opendir("paciencias");
     int found=0;
     while((entry = readdir(dir)) != NULL && !found){
         if(strcmp(entry->d_name,str) == 0){
             found=1;
-            readInstructions(gs,entry);
+            readInstructions(gs,entry,mj);
         }
     }
     closedir(dir);

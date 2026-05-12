@@ -1,10 +1,28 @@
 #include "main.h"
 #include <stdlib.h>
 
+FlagFunctionsR flagRestricoesCalc(char * line){
+    switch(*line){
+        case 'a' :
+            return &cartaTopoAs;
+        break;
+        case 'A' :
+            return &cartaFundoAs;
+        break;
+        case 'k' : 
+            return &cartaTopoRei;
+        break;
+        case 'K' :
+            return &cartaFundoRei; 
+        break;
+        default:
+            return NULL;
+        break;
+    }
+}
 
 
-
-FlagFunctionsP flagPegavelCalcAux(MovimentoEntrePilhas * mov, char * line){
+FlagFunctionsP flagPegavelCalcAux(char * line){
     switch(*line){
         case 'x' :
             return &alternadosNaipes;
@@ -21,14 +39,14 @@ FlagFunctionsP flagPegavelCalcAux(MovimentoEntrePilhas * mov, char * line){
     }
 }
 
-FlagFunctionsP flagPegavelCalc(MovimentoEntrePilhas * mov , char * line){
+FlagFunctionsP flagPegavelCalc(FlagFuncArray * arr , char * line){
     switch(*line){
         case '*' :
-            mov->variasCartasMoviveis=1;
+            arr->variasCartasMoviveis=1;
             return &sempreMovivel;
         break;
         case '+' :
-            mov->variasCartasMoviveis=1;
+            arr->variasCartasMoviveis=1;
             return NULL;
         break;
         case '[' :
@@ -41,13 +59,13 @@ FlagFunctionsP flagPegavelCalc(MovimentoEntrePilhas * mov , char * line){
             return &mesmoNaipe;
         break;
         default:
-            return flagPegavelCalcAux(mov,line);
+            return flagPegavelCalcAux(line);
         break;
     }
 }
 
-// NECESSITO FAZER ESTA FUNCAO AINDA NAO ESTA FEITA
-FlagFunctionsP flagColocavelCalcAux(MovimentoEntrePilhas * mov, char * line){
+
+FlagFunctionsP flagColocavelCalcAux(char * line){
     switch(*line){
         case 'C' :
             return &mesmaCor ;
@@ -55,15 +73,13 @@ FlagFunctionsP flagColocavelCalcAux(MovimentoEntrePilhas * mov, char * line){
         case 'D' :
             return &diferentesCores;
         break;
-        case 'V' : 
-            return ;
-        break;
         default:
-            return calcUltimaCarta(mov,line);
+            return NULL;
         break;
     }
 }
-FlagFunctionsC flagColocavelCalc(MovimentoEntrePilhas * mov , char * line){
+
+FlagFunctionsC flagColocavelCalc(char * line){
     switch(*line){
         case '<' :
             return &flagCrescente;
@@ -81,13 +97,57 @@ FlagFunctionsC flagColocavelCalc(MovimentoEntrePilhas * mov , char * line){
             return &alternadosNaipes;
         break;
         default:
-            return flagColocavelCalcAux(mov,line);
+            return flagColocavelCalcAux(line);
         break;
     }
 }
 
 
 /////////////////////////////////////////////////Funcoes de ver se as cartas sao pegaveis////////////////////////////////////
+
+int pilhaVazia(int linha,MatrizJogo * m){
+    int n = m->numLinhasMatriz;
+    if(n == 0 || linha >= n) return 0;
+    else return ((m->linhasMatriz + linha)->numCartasPilha == 0);
+}
+
+int cartaTopoAs(int linha,MatrizJogo * m){
+    int n = m->numLinhasMatriz;
+    if(n == 0 || linha >= n) return 0;
+    else{
+        int num = (m->linhasMatriz + linha)->numCartasPilha;
+        return (((m->linhasMatriz + linha)->cartasPilha + num)->valor == 1 );
+    }
+}
+
+int cartaTopoRei(int linha,MatrizJogo * m){
+    int n = m->numLinhasMatriz;
+    if(n == 0 || linha >= n) return 0;
+    else{
+        int num = (m->linhasMatriz + linha)->numCartasPilha;
+        return (((m->linhasMatriz + linha)->cartasPilha + num)->valor == 13 );
+    }
+}
+
+int cartaFundoAs(int linha,MatrizJogo * m){
+    int n = m->numLinhasMatriz;
+    if(n == 0 || linha >= n) return 0;
+    else{
+        PilhaDeCartas * pilha = (m->linhasMatriz + linha);
+        int num = pilha->numCartasPilha;
+        return ( num > 0 && (pilha->cartasPilha)->valor == 1 );
+    }
+}
+
+int cartaFundoRei(int linha,MatrizJogo * m){
+    int n = m->numLinhasMatriz;
+    if(n == 0 || linha >= n) return 0;
+    else{
+        PilhaDeCartas * pilha = (m->linhasMatriz + linha);
+        int num = pilha->numCartasPilha;
+        return ( num > 0 && (pilha->cartasPilha)->valor == 13 );
+    }
+}
 
 int diferentesCores(Carta carta1,Carta carta2){
     if(carta1.naipe == 'C' || carta1.naipe == 'O'){
@@ -106,9 +166,12 @@ int mesmaCor(Carta carta1,Carta carta2){
 int alternadosNaipes(Carta carta1,Carta carta2){
     return(carta1.naipe != carta2.naipe); // !mesmoNaipe
 }
+
 //POR FAZER - RQ
 int flagDestVazio(Carta carta1,Carta carta2){
+
 }
+
 int mesmoNaipe(Carta carta1,Carta carta2){
     return (carta1.naipe == carta2.naipe);
 }

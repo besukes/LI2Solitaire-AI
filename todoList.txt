@@ -1,2 +1,41 @@
-autoMovesCalc .. Modulo readFiles.c --linha 56
-flagColocavelCalcAux .. Modulo flagFunctions --linha 58 , CASO V
+------------------------------------------------------------TO DO LIST-----------------------------------------------
+1---
+2---
+3---
+4---
+5---
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////FUNCOES INUTILIZADAS//////////////////////////////////////////////////
+void autoMovesCalc(AutoMoves * am , char * line){
+    
+}
+
+void autoInstruction(GameSettings * gs , char * line){
+    int n = ++(gs->jogo.qntdAutoMoves);
+    long tagOrig=0,tagDest=0;
+    line=criarTag(&tagOrig,line);
+    line=criarTag(&tagDest,line);
+    AutoMoves * am = comparaTags(am,tagOrig,tagDest);
+    if(am==NULL){
+        gs->jogo.autoMoves = realloc(gs->jogo.autoMoves,sizeof(AutoMoves)*n);
+        am = gs->jogo.autoMoves + n -1;
+        inicializaAutoMoves(am,tagOrig,tagDest);
+    }
+    else{
+        am->numMovs++;
+        inicializaAutoMoves(am,tagOrig,tagDest);
+    }
+    autoMovesCalc(am,line); // NECESSITO FAZER ESTA FUNCAO AINDA NAO ESTA FEITA
+}
