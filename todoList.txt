@@ -1,2 +1,2 @@
 autoMovesCalc .. Modulo readFiles.c --linha 56
-flagColocavelCalc .. Modulo flagFunctions --linha 46
+flagColocavelCalcAux .. Modulo flagFunctions --linha 58 , CASO V

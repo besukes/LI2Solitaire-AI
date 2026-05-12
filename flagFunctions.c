@@ -50,10 +50,10 @@ FlagFunctionsP flagPegavelCalc(MovimentoEntrePilhas * mov , char * line){
 FlagFunctionsP flagColocavelCalcAux(MovimentoEntrePilhas * mov, char * line){
     switch(*line){
         case 'C' :
-            return ;
+            return &mesmaCor ;
         break;
         case 'D' :
-            return ;
+            return &diferentesCores;
         break;
         case 'V' : 
             return ;
@@ -63,23 +63,22 @@ FlagFunctionsP flagColocavelCalcAux(MovimentoEntrePilhas * mov, char * line){
         break;
     }
 }
-// NECESSITO FAZER ESTA FUNCAO AINDA NAO ESTA FEITA
 FlagFunctionsC flagColocavelCalc(MovimentoEntrePilhas * mov , char * line){
     switch(*line){
         case '<' :
-            return ;
+            return &flagCrescente;
         break;
         case '>' :
-            return ;
+            return &flagDecrescente;
         break;
         case '~' :
-            return ;
+            return &flagDifpor1;
         break;
         case 'M' :
-            return ;
+            return &mesmoNaipe;
         break;
         case 'X' :
-            return ;
+            return &alternadosNaipes;
         break;
         default:
             return flagColocavelCalcAux(mov,line);
@@ -94,7 +93,7 @@ int diferentesCores(Carta carta1,Carta carta2){
     if(carta1.naipe == 'C' || carta1.naipe == 'O'){
         return (carta2.naipe == 'E' || carta2.naipe == 'P');
     }
-    else return (carta2.naipe == 'O' || carta2.naipe != 'C');
+    else return (carta2.naipe == 'O' || carta2.naipe == 'C');
 }
 
 int mesmaCor(Carta carta1,Carta carta2){
@@ -107,7 +106,9 @@ int mesmaCor(Carta carta1,Carta carta2){
 int alternadosNaipes(Carta carta1,Carta carta2){
     return(carta1.naipe != carta2.naipe); // !mesmoNaipe
 }
-
+//POR FAZER - RQ
+int flagDestVazio(Carta carta1,Carta carta2){
+}
 int mesmoNaipe(Carta carta1,Carta carta2){
     return (carta1.naipe == carta2.naipe);
 }
@@ -118,6 +119,9 @@ int flagCrescente(Carta carta1,Carta carta2){
 
 int flagDecrescente(Carta carta1,Carta carta2){
     return (carta1.valor-carta2.valor == 1);
+}
+int flagDifpor1(Carta carta1 , Carta carta2){
+    return(carta1.valor-carta2.valor == 1 || carta1.valor-carta2.valor == (-1));
 }
 
 int sempreMovivel(Carta c1,Carta c2){
