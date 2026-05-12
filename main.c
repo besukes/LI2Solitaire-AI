@@ -12,5 +12,4 @@ int main(int argc,char * argv[]){
         printf("ERRO!! Não introduziu o nome do ficheiro ou introduziu-o incorretamente\n");
         return 1;
     }
-
 }
