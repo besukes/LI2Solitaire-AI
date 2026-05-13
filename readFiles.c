@@ -21,7 +21,7 @@ void addMovInstruction(MovimentoEntrePilhas * mov, long tagOrigem , long tagDest
     mov->tagOrig = tagOrigem;
     mov->tagDest = tagDestino;
     int n = ++mov->numMovs;
-    mov->arr = realloc(mov->arr,sizeof(FlagFuncArray)*n);
+    mov->arr = realloc(mov->arr,sizeof(struct FlagFuncArray)*n);
     FlagFuncArray * arrFlags = (mov->arr) + n - 1;
     initFlagFuncArray(arrFlags);
     while(*line != '#' && *line!='\n' && *line!=' '){
@@ -43,7 +43,7 @@ void movInstruction(GameSettings * gs, char * line)
     //Agora line aponta para as flags
     MovimentoEntrePilhas * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n);
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
-        gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas,sizeof(MovimentoEntrePilhas)*n);
+        gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.movimentoPilhas + n - 1;
         existeregra->numMovs = 0;
     }
@@ -59,7 +59,7 @@ void autoInstruction(GameSettings * gs, char * line)
     //Agora line aponta para as flags
     AutoMoves * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n);
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
-        gs->jogo.autoMoves = realloc(gs->jogo.movimentoPilhas,sizeof(MovimentoEntrePilhas)*n);
+        gs->jogo.autoMoves = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.autoMoves + n - 1;
         existeregra->numMovs = 0;
     }
@@ -68,7 +68,7 @@ void autoInstruction(GameSettings * gs, char * line)
 
 void tipoInstruction(GameSettings * gs , char * line){
     int n = ++gs->jogo.numPilhas;
-    gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(PilhasStruct)*n);
+    gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(struct PilhasStruct)*n);
     long tag=0;
     line = criarTag(&tag,line);
     PilhasStruct * pilhaAtual = gs->jogo.pilhas + n - 1;
@@ -90,7 +90,7 @@ void initInstruction(GameSettings * gs , char * line,MatrizJogo * mj){
 void winInstruction(GameSettings * gs , char * line){
     gs->numCondicoesVitoria++;
     int n = gs->numCondicoesVitoria , num = 0;
-    gs->winCon = realloc(gs->winCon,sizeof(WinCondition)*gs->numCondicoesVitoria);
+    gs->winCon = realloc(gs->winCon,sizeof(struct WinCondition)*gs->numCondicoesVitoria);
     long tag = 0;
     line = criarTag(&tag,line);
     num = strToNumber(line);

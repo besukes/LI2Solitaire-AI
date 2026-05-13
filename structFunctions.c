@@ -51,3 +51,23 @@ MatrizJogo initMatrizJogo(void){
     mj.linhasMatriz = NULL;
     return mj;
 }
+
+void addCartasLinkedList(LinkedList novo , int indx , int num , MatrizJogo m){
+    int i = (m.linhasMatriz + indx)->numCartasPilha;
+    Carta * pilha = (m.linhasMatriz + indx)->cartasPilha;
+    for(int j=i-num , counter = 0 ; j<i ; j++ , counter++){
+        (novo->cartasMovidas + counter)->naipe = (pilha + j)->naipe;
+        (novo->cartasMovidas + counter)->valor = (pilha + j)->valor;
+    }
+}
+
+void headLinkedList(LinkedList * l , int indexAnterior, int indexNovo, int numCartasMovidas , MatrizJogo matriz){
+    LinkedList novo = malloc(sizeof(struct LinkedListUltimaJogada));
+    novo->indexPilhaAnterior = indexAnterior;
+    novo->indexNovaPilha = indexNovo;
+    novo->numCartasMovidas = numCartasMovidas;
+    novo->prox = *l;
+    novo->cartasMovidas = malloc(sizeof(struct Carta)*numCartasMovidas);
+    addCartasLinkedList(novo,indexAnterior,numCartasMovidas,matriz);
+    *l=novo;
+}

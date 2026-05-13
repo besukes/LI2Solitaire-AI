@@ -30,6 +30,14 @@ typedef int (*FlagFunctionsR) (int,MatrizJogo);
 
 typedef int (*FlagFunctionsV) (int,MatrizJogo);
 
+typedef struct LinkedListUltimaJogada{
+    int indexPilhaAnterior;
+    int indexNovaPilha;
+    int numCartasMovidas;
+    Carta * cartasMovidas;
+    struct LinkedList * prox; // Aponta para o proximo elemento da lista
+} * LinkedList;
+
 typedef struct FlagFuncArray{
     int numFlagsPegavel; //Num de Flags que indicam cartas que se podem pegar de uma dada pilha
     FlagFunctionsP flagsPegavel[10];
