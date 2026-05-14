@@ -1,6 +1,6 @@
 ------------------------------------------------------------TO DO LIST-----------------------------------------------
 1---readFiles.c Funcao que carrega um jogo Existente
-2---
+2---shuffle cards no randomizeCards.c
 3---
 4---
 5---
