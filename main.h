@@ -40,9 +40,9 @@ typedef struct LinkedListUltimaJogada{
 
 typedef struct FlagFuncArray{
     int numFlagsPegavel; //Num de Flags que indicam cartas que se podem pegar de uma dada pilha
-    FlagFunctionsP flagsPegavel[10];
+    FlagFunctionsP flagsPegavel[7];
     int numFlagsColocavel; //Num de Flags que indicam cartas que se podem colocar numa dada pilha
-    FlagFunctionsC flagsColocavel[10];
+    FlagFunctionsC flagsColocavel[7];
     int numRestricoes;
     FlagFunctionsR flagRestricoes[4];
     Boolean variasCartasMoviveis;
