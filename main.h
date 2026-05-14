@@ -30,13 +30,13 @@ typedef int (*FlagFunctionsR) (int,MatrizJogo);
 
 typedef int (*FlagFunctionsV) (int,MatrizJogo);
 
-typedef struct LinkedListUltimaJogada{
+typedef struct LastMoveLL{
     int indexPilhaAnterior;
     int indexNovaPilha;
     int numCartasMovidas;
     Carta * cartasMovidas;
-    struct LinkedList * prox; // Aponta para o proximo elemento da lista
-} * LinkedList;
+    struct LastMoveLL * prox; // Aponta para o proximo elemento da lista
+} * LastMoveLL;
 
 typedef struct FlagFuncArray{
     int numFlagsPegavel; //Num de Flags que indicam cartas que se podem pegar de uma dada pilha
@@ -111,7 +111,7 @@ void inicializaAutoMoves(AutoMoves * am , int tagOrig , int tagDest);
 void initFlagFuncArray(FlagFuncArray * arr);
 
 //Modulo readFiles.c
-int readFiles(GameSettings * gs,String str,MatrizJogo * mj);
+int readFiles(GameSettings * gs,MatrizJogo * mj);
 
 //Modulo simpleFunctions.c
 int exp(int base,int expo);
@@ -127,3 +127,6 @@ FlagFunctionsP flagColocavelCalcAux(char * line);
 FlagFunctionsP flagPegavelCalc(FlagFuncArray * arr , char * line);
 FlagFunctionsP flagPegavelCalcAux(char * line);
 FlagFunctionsR flagRestricoesCalc(char * line);
+
+//Modulo randomizeCards.c
+void randomizaJogo(GameSettings * gs , MatrizJogo * mj);

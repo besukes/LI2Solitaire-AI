@@ -64,3 +64,20 @@ MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,int tagOrig , int
 }
 
 
+char convertToNaipe(int div){
+    switch(div){
+        case 0 : 
+            return 'C';
+        break;
+        case 1 :
+            return 'E';
+        break;
+        case 2 :
+            return 'O';
+        break;
+        default :
+            return 'P';
+        break;
+    }
+}
+

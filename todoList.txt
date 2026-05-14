@@ -1,6 +1,6 @@
 ------------------------------------------------------------TO DO LIST-----------------------------------------------
-1---LINKED LISTS para undoMove
-2---Funcao que adiciona um elemento à cabeca de uma linked list
+1---readFiles.c Funcao que carrega um jogo Existente
+2---
 3---
 4---
 5---

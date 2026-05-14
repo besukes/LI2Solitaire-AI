@@ -164,7 +164,7 @@ void readInstructions(GameSettings * gs , struct dirent * entry,MatrizJogo * mj)
     fclose(file);
 }
 
-int readFiles(GameSettings * gs,String str,MatrizJogo * mj){
+int readNewGame(GameSettings * gs , String str , MatrizJogo * mj){
     struct dirent * entry;
     DIR * dir = opendir("paciencias");
     int found=0;
@@ -177,4 +177,28 @@ int readFiles(GameSettings * gs,String str,MatrizJogo * mj){
     closedir(dir);
     if(!found) return 1;
     return 0;
+}
+
+int readExistingGame(GameSettings * gs , String str , MatrizJogo * mj){
+    
+}
+
+int readFiles(GameSettings * gs,MatrizJogo * mj){
+    int op;
+    char * str;
+    printf("Olá jogador.Para continuar insira o número da opção que melhor descreve oque quer fazer :\n "
+            "1- LOAD NEW GAME\n"
+            "2- START NEW GAME\n"
+            "DEFAULT - START NEW GAME\n");
+    scanf("%d",&op);
+    printf("Insira o nome do ficheiro do qual pretende fazer uso para jogar : \n");
+    scanf("%s",&str);
+    switch(op){
+        case 1 :
+            return readExistingGame(gs,str,mj);
+        break;
+        default : 
+            return readNewGame(gs,str,mj);
+        break;
+    }
 }

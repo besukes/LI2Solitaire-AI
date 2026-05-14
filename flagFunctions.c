@@ -24,6 +24,9 @@ FlagFunctionsR flagRestricoesCalc(char * line){
 
 FlagFunctionsP flagPegavelCalcAux(char * line){
     switch(*line){
+        case 'm' :
+            return &mesmoNaipe;
+        break;
         case 'x' :
             return &alternadosNaipes;
         break;
@@ -54,9 +57,6 @@ FlagFunctionsP flagPegavelCalc(FlagFuncArray * arr , char * line){
         break;
         case ']' :
             return &flagCrescente;
-        break;
-        case 'm' :
-            return &mesmoNaipe;
         break;
         default:
             return flagPegavelCalcAux(line);
