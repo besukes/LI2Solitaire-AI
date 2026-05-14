@@ -4,9 +4,11 @@ typedef int Boolean ;
 
 typedef char * String;
 
+typedef char Naipe;
+
 typedef struct Carta{
     int valor; // 1-13
-    char naipe; // C-Copas , E-Espadas , O-Ouro , P-Paus
+    Naipe naipe; // C-Paus , D-Ouros , H-Copas , S-Espadas
 }Carta;
 
 typedef struct PilhaDeCartas{

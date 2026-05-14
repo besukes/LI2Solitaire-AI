@@ -70,13 +70,13 @@ char convertToNaipe(int div){
             return 'C';
         break;
         case 1 :
-            return 'E';
+            return 'D';
         break;
         case 2 :
-            return 'O';
+            return 'H';
         break;
         default :
-            return 'P';
+            return 'S';
         break;
     }
 }

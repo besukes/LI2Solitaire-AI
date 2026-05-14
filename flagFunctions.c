@@ -150,27 +150,23 @@ int cartaFundoRei(int linha,MatrizJogo * m){
 }
 
 int diferentesCores(Carta carta1,Carta carta2){
-    if(carta1.naipe == 'C' || carta1.naipe == 'O'){
-        return (carta2.naipe == 'E' || carta2.naipe == 'P');
+    if(carta1.naipe == 'D' || carta1.naipe == 'H'){
+        return (carta2.naipe == 'C' || carta2.naipe == 'S');
     }
-    else return (carta2.naipe == 'O' || carta2.naipe == 'C');
+    else return (carta2.naipe == 'D' || carta2.naipe == 'H');
 }
 
 int mesmaCor(Carta carta1,Carta carta2){
-    if(carta1.naipe == 'C' || carta1.naipe == 'O'){
-        return (carta2.naipe == 'C' || carta2.naipe == 'O');
+    if(carta1.naipe == 'D' || carta1.naipe == 'H'){
+        return (carta2.naipe == 'D' || carta2.naipe == 'H');
     }
-    else return (carta2.naipe == 'E' || carta2.naipe == 'P');
+    else return (carta2.naipe == 'C' || carta2.naipe == 'S');
 }
 
 int alternadosNaipes(Carta carta1,Carta carta2){
     return(carta1.naipe != carta2.naipe); // !mesmoNaipe
 }
 
-//POR FAZER - RQ
-int flagDestVazio(Carta carta1,Carta carta2){
-
-}
 
 int mesmoNaipe(Carta carta1,Carta carta2){
     return (carta1.naipe == carta2.naipe);
