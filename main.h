@@ -50,43 +50,40 @@ typedef struct FlagFuncArrayP{
 }ArrayFlagsPegar;
 
 typedef struct FlagFuncArrayC{
-    long tagDest; //Pilha onde vao parar as cartas
     int numFlagsColocavel; //Num de Flags que indicam cartas que se podem colocar numa dada pilha
     FlagFunctionsC flagsColocavel[7];
     int numRestricoes;
     FlagFunctionsR flagRestricoes[4];
-    FlagFunctionsV colocaEmPilhaVazia;
 }ArrayFlagsColocar;
 
 
 typedef struct MovimentoEntrePilhas{
     long tagOrig; //Pilha de onde vem cas cartas
+    long tagDest; //Pilha onde vao parar as cartas
     int numMovsP; //Num de movs que condicionam pegar cartas
     //Array de um struct que guarda as condicoes de pegar Cartas de uma dada pilha
     ArrayFlagsPegar * arrP;
     int numMovsC; //Num de movs que condicionam a colocação de cartas
     //Array de um struct que guarda o numero de funcoes de um dado movimento de pilhas
     ArrayFlagsColocar * arrC;
+    FlagFunctionsV colocaEmPilhaVazia;
 }MovimentoEntrePilhas;
 
+
 typedef struct RegrasPilha{
+    long tag; //tag da pilha dada pela soma dos caracteres ASCII
     Boolean todaPilhaVisivel;
     Boolean cartaTopoVisivel;
     Boolean existeMaxCartas; // MAX cartas 1
 }RegrasPilha;
-
-typedef struct PilhasStruct{
-    long tag; //tag da pilha dada pela soma dos caracteres ASCII
-    RegrasPilha rules;
-}PilhasStruct;
 
 typedef MovimentoEntrePilhas AutoMoves;
 
 typedef struct JogoStruct{
     String nomeJogo;
     int numPilhas;
-    PilhasStruct * pilhas;
-    int numCondicoes;
+    RegrasPilha * pilhas;
+    int numCondicoesMov;
     MovimentoEntrePilhas * movimentoPilhas;
     int qntdAutoMoves;
     AutoMoves * autoMoves;
@@ -136,7 +133,7 @@ MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,int tagOrig , int
 int pilhaVazia(int linha,MatrizJogo * m);
 FlagFunctionsC flagColocavelCalc(char * line);
 FlagFunctionsP flagColocavelCalcAux(char * line);
-FlagFunctionsP flagPegavelCalc(ArrayFlagsColocar * arr , char * line);
+FlagFunctionsP flagPegavelCalc(char * line);
 FlagFunctionsP flagPegavelCalcAux(char * line);
 FlagFunctionsR flagRestricoesCalc(char * line);
 

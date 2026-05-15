@@ -42,15 +42,10 @@ FlagFunctionsP flagPegavelCalcAux(char * line){
     }
 }
 
-FlagFunctionsP flagPegavelCalc(FlagFuncArray * arr , char * line){
+FlagFunctionsP flagPegavelCalc(char * line){
     switch(*line){
         case '*' :
-            arr->variasCartasMoviveis=1;
             return &sempreMovivel;
-        break;
-        case '+' :
-            arr->variasCartasMoviveis=1;
-            return NULL;
         break;
         case '[' :
             return &flagDecrescente;

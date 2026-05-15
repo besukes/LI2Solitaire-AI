@@ -3,18 +3,13 @@
 #include <stdlib.h>
 
 
-
-
-PossiveisJogadas efetuaJogada(GameSettings *gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1 , int pilha2 ,int num){
-
-}
-
-
 int verificaCondicoesPilha(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
     
 }
 
-PossiveisJogadas cartasPegaveis(GameSettings *gs , MatrizJogo * mj , int pilha , int num){
+
+
+PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int pilha1 , int pilha2 , int num){
     int lim = mj->numLinhasMatriz;
     if(pilha > lim) return invalid;
     int valido = 0;
@@ -27,21 +22,35 @@ PossiveisJogadas cartasPegaveis(GameSettings *gs , MatrizJogo * mj , int pilha ,
 }
 
 
+PossiveisJogadas handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1,int * pilha2,int numCartas){
+    
+}
 
 
-void handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1,int * pilha2,int numCartas){
-    printf("Insira a pilha onde quer colocar essas cartas\n");
-    scanf("%d",pilha2);
-    efetuaJogada(gs,mj,lm,pilha1,*pilha2,numCartas);
+PossiveisJogadas efetuaJogadaMovimentoCartas(GameSettings * gs , MatrizJogo * mj , LastMoveLL * undoState){
+    int pilha1 , pilha2 , numCartas;
+    PossiveisJogadas estadoJogada = valid;
+    pedeJogadaUtilizador(&pilha1,&pilha2,&numCartas);
+    long tag1 = procuraTag(mj,pilha1) , tag2 = procuraTag(mj,pilha2);
+    if(tag1!=(-1) && tag2!=(-1)){
+        MovimentoEntrePilhas * mov = comparaTags(gs->jogo.movimentoPilhas,tag1,tag2,gs->jogo.numCondicoesMov);
+        estadoJogada = jogadaValida(mov,mj,pilha1,pilha2,numCartas);
+        if(estadoJogada == valid) estadoJogada = handleEfetuaJogada(gs,mj,undoState,pilha1,&pilha2,numCartas);
+    }
+    else estadoJogada = invalid;
+    return estadoJogada;
 }
 
 
 
-void pedeJogadaUtilizador(int * p1 , int * num){
+
+void pedeJogadaUtilizador(int * p1 , int * p2 ,int * num){
     printf("Insira o número da pilha à qual quer ir buscar cartas\n");
     scanf("%d",p1);
     printf("Insira o número de cartas que quer pegar\n");
     scanf("%d",num);
+    printf("Insira a pilha onde quer colocar essas cartas\n");
+    scanf("%d",p2);
 }
 
 

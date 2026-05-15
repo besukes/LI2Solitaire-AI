@@ -64,6 +64,13 @@ MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,int tagOrig , int
 }
 
 
+long procuraTag(MatrizJogo * mj , int pilha){
+    if(pilha>mj->numLinhasMatriz) return -1;
+    else return ((mj->linhasMatriz + pilha)->tagPilha);
+}
+
+
+
 char convertToNaipe(int div){
     switch(div){
         case 0 : 
@@ -79,5 +86,12 @@ char convertToNaipe(int div){
             return 'S';
         break;
     }
+}
+
+int pertenceString(char c , char str[]){
+    for(int i=0;str[i] != '\0';i++){
+        if(c==str[i]) return 1;
+    }
+    return 0;
 }
 

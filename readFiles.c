@@ -4,50 +4,61 @@
 #include <string.h>
 
 
-void addMovInstructionAux(FlagFuncArray * arrFlags , char * line , FlagFunctionsC f){
-    if(f==NULL){ //Se a flag nao for sobre colocar cartas numa pilha , vemos se e de restricao
-        FlagFunctionsR f = flagRestricoesCalc(line);
-        if(f==NULL){ //Se a flag nao for de restricao , so pode ser a flag V de vazia
-            arrFlags->colocaEmPilhaVazia = &pilhaVazia;
-        }
-        else{
-            arrFlags->flagRestricoes[arrFlags->numRestricoes ++] = f;
-        }
+
+
+int initEVerificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
+    char str[8] = "*[]mxcd" , str2[7]= "<>MXCD" , str3[5] = "aAkK";
+    if(pertenceString(*line,str)){
+        mov->numMovsP++;
+        initArrP(mov);
+        return 1;
     }
-    else arrFlags->flagsColocavel[arrFlags->numFlagsColocavel ++ ] = f;
+    else{
+        if(pertenceString(*line,str2)){
+            mov->numMovsC++;
+            initArrC(mov);
+            return 2;
+        }
+        else if(pertenceString(*line,str3)){
+            mov->numMovsC++;
+            initArrC(mov);
+            return 3;
+        }
+        else return 4;
+    }
 }
 
-void addMovInstruction(MovimentoEntrePilhas * mov, long tagOrigem , long tagDestino , char * line){
-    mov->tagOrig = tagOrigem;
-    mov->tagDest = tagDestino;
-    int n = ++mov->numMovs;
-    mov->arr = realloc(mov->arr,sizeof(struct FlagFuncArray)*n);
-    FlagFuncArray * arrFlags = (mov->arr) + n - 1;
-    initFlagFuncArray(arrFlags);
+
+void addMovInstruction(MovimentoEntrePilhas * mov,long tagDestino , char * line){
     while(*line != '#' && *line!='\n' && *line!=' '){
-        FlagFunctionsP f = flagPegavelCalc(arrFlags,line); //Caso a flag seja o "+" , altera o boolean do mov
-        if(f==NULL && *line != '+'){ // Se a flag nao for de carta pegavel , entao vemos de que e
-            addMovInstructionAux(arrFlags,line,flagColocavelCalc(line));
-        }
-        else arrFlags->flagsPegavel[arrFlags->numFlagsPegavel ++ ] = f;
+        int u = initEVerificaTipoFlag(mov,line);
+        int n1= mov->numMovsC , n2 = mov->numMovsP;
+        if(u==1) (mov->arrP + n1 - 1)->flagsPegavel[mov->arrP->numFlagsPegavel ++] = flagPegavelCalc(line);
+        else if(u==2)  (mov->arrC + n2 - 1)->flagsColocavel[mov->arrC->numFlagsColocavel ++] = flagColocavelCalc(line);
+        else if(u==3) (mov->arrC + n2 - 1)->flagRestricoes[mov->arrC->numRestricoes ++] = flagRestricoesCalc(line);
+        else if(u==4) mov->colocaEmPilhaVazia = &pilhaVazia;
         line++;
     }
 }
 
 void movInstruction(GameSettings * gs, char * line)
 {
-    long tagOrigem =0 , tagDestino = 0;
+    long tagOrigem = 0 , tagDestino = 0;
     line = criarTag(&tagOrigem , line);
     line = criarTag(&tagDestino , line);
-    int n = ++gs->jogo.numCondicoes;
+    int n = ++gs->jogo.numCondicoesMov;
     //Agora line aponta para as flags
     MovimentoEntrePilhas * existeregra = comparaTags(gs->jogo.movimentoPilhas, tagOrigem, tagDestino,n);
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
         gs->jogo.movimentoPilhas = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.movimentoPilhas + n - 1;
-        existeregra->numMovs = 0;
+        existeregra->numMovsC = 0;
+        existeregra->numMovsP=0;
+        existeregra->tagOrig = tagOrigem;
+        existeregra->tagDest = tagDestino;
+        existeregra->colocaEmPilhaVazia = NULL;
     }
-    addMovInstruction(existeregra,tagOrigem,tagDestino,line);
+    addMovInstruction(existeregra,tagDestino,line);
 }
 
 void autoInstruction(GameSettings * gs, char * line)
@@ -61,19 +72,23 @@ void autoInstruction(GameSettings * gs, char * line)
     if(existeregra == NULL){ //Verificar se ja existem movimentos entre estas duas pilhas guardadas
         gs->jogo.autoMoves = realloc(gs->jogo.movimentoPilhas,sizeof(struct MovimentoEntrePilhas)*n);
         existeregra = gs->jogo.autoMoves + n - 1;
-        existeregra->numMovs = 0;
+        existeregra->numMovsC = 0;
+        existeregra->numMovsP=0;
+        existeregra->tagOrig = tagOrigem;
+        existeregra->tagDest = tagDestino;
+        existeregra->colocaEmPilhaVazia = NULL;
     }
-    addMovInstruction(existeregra,tagOrigem,tagDestino,line);
+    addMovInstruction(existeregra,tagDestino,line);
 }
 
 void tipoInstruction(GameSettings * gs , char * line){
     int n = ++gs->jogo.numPilhas;
-    gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(struct PilhasStruct)*n);
+    gs->jogo.pilhas = realloc(gs->jogo.pilhas,sizeof(struct RegrasPilha)*n);
     long tag=0;
     line = criarTag(&tag,line);
-    PilhasStruct * pilhaAtual = gs->jogo.pilhas + n - 1;
+    RegrasPilha * pilhaAtual = gs->jogo.pilhas + n - 1;
     pilhaAtual->tag = tag;
-    calculaRulesPilha(&(pilhaAtual->rules),line);
+    calculaRulesPilha(&pilhaAtual,line);
 }
 
 void initInstruction(GameSettings * gs , char * line,MatrizJogo * mj){

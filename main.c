@@ -7,20 +7,17 @@ PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMo
     int pilha1 , pilha2 , numCartas , valido;
     char jogada = 0;
     PossiveisJogadas estadoJogada = valid;
-    printf("Indique a jogada que quer efetuar :\n " 
+    printf("Indique a jogada que quer efetuar :\n" 
             "Q - Sair\n"
             "D - Desfazer Jogada\n"
             "S - Salvar Jogo\n"
             "J - Efetuar Movimento de Cartas\n"
-            "CUIDADO! Se inserires uma jogada inválida , o jogo irá fechar..!");
-    scanf("%d",&jogada);
+            "CUIDADO! Se inserires uma jogada inválida , o jogo irá fechar..!\n"
+    );
+    scanf("%c",&jogada);
     estadoJogada = recebeInput(jogada);
     if(estadoJogada==undo) undoMove(mj,undoState);
-    else if(estadoJogada==valid){
-        pedeJogadaUtilizador(&pilha1,&numCartas);
-        estadoJogada = cartasPegaveis(gs,mj,pilha1,numCartas);
-        if(estadoJogada == valid) estadoJogada = handleEfetuaJogada(gs,mj,undoState,pilha1,&pilha2,numCartas);
-    }
+    else if(estadoJogada==valid) estadoJogada = efetuaJogadaMovimentoCartas(gs,mj,undoState);
     return estadoJogada;
 }
 

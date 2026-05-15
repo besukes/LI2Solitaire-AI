@@ -3,8 +3,10 @@
 2---shuffle cards no randomizeCards.c
 3---Salvar o jogo
 4---userInterface.c (tudo)
-5---gameplayHandle.c (funcoes que vem com ele)
-6-- refazer readFiles (o struct MovimentoEntrePilhas foi alterado)
+5--- HANDLE GAMEPLAY
+6-- fazer jogadaValida
+7-- INIT arrC e arrP funcoes
+8-- Verifica Condicoes Pilha com funcoes de arrC e arrP de mov
 
 
 
