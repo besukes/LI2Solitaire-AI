@@ -2,6 +2,8 @@
 /////////////////////////////////////////////Typedefs e structs utilizados///////////////////////////////////////////////////
 typedef int Boolean ;
 
+typedef enum {quit,undo,save,invalid,valid,GameWon} PossiveisJogadas;
+
 typedef char * String;
 
 typedef char Naipe;
@@ -40,24 +42,31 @@ typedef struct LastMoveLL{
     struct LastMoveLL * prox; // Aponta para o proximo elemento da lista
 } * LastMoveLL;
 
-typedef struct FlagFuncArray{
+
+typedef struct FlagFuncArrayP{
     int numFlagsPegavel; //Num de Flags que indicam cartas que se podem pegar de uma dada pilha
     FlagFunctionsP flagsPegavel[7];
+    Boolean variasCartasMoviveis;
+}ArrayFlagsPegar;
+
+typedef struct FlagFuncArrayC{
+    long tagDest; //Pilha onde vao parar as cartas
     int numFlagsColocavel; //Num de Flags que indicam cartas que se podem colocar numa dada pilha
     FlagFunctionsC flagsColocavel[7];
     int numRestricoes;
     FlagFunctionsR flagRestricoes[4];
-    Boolean variasCartasMoviveis;
     FlagFunctionsV colocaEmPilhaVazia;
-}FlagFuncArray;
+}ArrayFlagsColocar;
 
 
 typedef struct MovimentoEntrePilhas{
     long tagOrig; //Pilha de onde vem cas cartas
-    long tagDest; //Pilha onde vao parar as cartas
-    int numMovs; //Num de movs de pilhaOrig para pilhaDest
+    int numMovsP; //Num de movs que condicionam pegar cartas
+    //Array de um struct que guarda as condicoes de pegar Cartas de uma dada pilha
+    ArrayFlagsPegar * arrP;
+    int numMovsC; //Num de movs que condicionam a colocação de cartas
     //Array de um struct que guarda o numero de funcoes de um dado movimento de pilhas
-    FlagFuncArray * arr;
+    ArrayFlagsColocar * arrC;
 }MovimentoEntrePilhas;
 
 typedef struct RegrasPilha{
@@ -110,7 +119,8 @@ typedef struct game{
 GameSettings initStructs(void);
 MatrizJogo initMatrizJogo(void);
 void inicializaAutoMoves(AutoMoves * am , int tagOrig , int tagDest);
-void initFlagFuncArray(FlagFuncArray * arr);
+void initFlagFuncArrayC(ArrayFlagsColocar * arr1);
+void initFlagFuncArrayP(ArrayFlagsPegar * arr2);
 
 //Modulo readFiles.c
 int readFiles(GameSettings * gs,MatrizJogo * mj);
@@ -126,7 +136,7 @@ MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,int tagOrig , int
 int pilhaVazia(int linha,MatrizJogo * m);
 FlagFunctionsC flagColocavelCalc(char * line);
 FlagFunctionsP flagColocavelCalcAux(char * line);
-FlagFunctionsP flagPegavelCalc(FlagFuncArray * arr , char * line);
+FlagFunctionsP flagPegavelCalc(ArrayFlagsColocar * arr , char * line);
 FlagFunctionsP flagPegavelCalcAux(char * line);
 FlagFunctionsR flagRestricoesCalc(char * line);
 
