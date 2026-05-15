@@ -46,14 +46,14 @@ typedef struct LastMoveLL{
 typedef struct FlagFuncArrayP{
     int numFlagsPegavel; //Num de Flags que indicam cartas que se podem pegar de uma dada pilha
     FlagFunctionsP flagsPegavel[7];
+    int numRestricoes;
+    FlagFunctionsR flagRestricoes[4];
     Boolean variasCartasMoviveis;
 }ArrayFlagsPegar;
 
 typedef struct FlagFuncArrayC{
     int numFlagsColocavel; //Num de Flags que indicam cartas que se podem colocar numa dada pilha
     FlagFunctionsC flagsColocavel[7];
-    int numRestricoes;
-    FlagFunctionsR flagRestricoes[4];
 }ArrayFlagsColocar;
 
 

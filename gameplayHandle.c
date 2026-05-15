@@ -3,26 +3,68 @@
 #include <stdlib.h>
 
 
-int verificaCondicoesPilha(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
-    
+
+int verifyColocarCartas(MovimentoEntrePilhas * mov , Carta * ultimaCartaOrig , Carta * cartaDest){
+    int valido = 1 , n = mov->numMovsC;
+    ArrayFlagsColocar * arr = mov->arrC;
+    for(int i=0;i<n && arr != NULL && valido == 1;i++,arr++){
+        int k = arr->numFlagsColocavel;
+        for(int j=0;j<k && valido == 1;j++){
+            int (*func)(Carta,Carta) = arr->flagsColocavel[j];
+            valido = valido && func(*ultimaCartaOrig,*cartaDest);
+        }
+    }
+    return valido;
 }
 
 
+int validaCondicoes(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
+    int i = p->numCartasPilha , lim = i-num + 1 , max = arr->numFlagsPegavel ,
+        verify = 1;
+    for(;i>lim && verify == 1;i--){
+        for(int j=0;j<max && verify == 1;j++){
+            int (*func)(Carta,Carta) = arr->flagsPegavel[j];
+            if(num>1 && !arr->variasCartasMoviveis) verify = 0;
+            verify = verify && func(*(p->cartasPilha + i),*(p->cartasPilha + i - 1));
+        }
+    }
+    return verify;
+}
+
+int validaRestricoes(ArrayFlagsPegar * arr , MatrizJogo * mj , int pilha1){
+    int lim = arr->numRestricoes , valid = 1;
+    for(int i=0;i<lim && valid == 1;i++){
+        int (*func)(int,MatrizJogo) = arr->flagRestricoes[i];
+        valid = valid && func(pilha1,*mj);
+    }
+    return valid;
+}
+
+int verificaPegarCartasValido(MovimentoEntrePilhas * mov , PilhaDeCartas * p, int num , MatrizJogo * mj , int pilha1){
+    int valido = 0 , n = mov->numMovsP;
+    ArrayFlagsPegar * arr = mov->arrP;
+    for(int i=0;i<n && arr != NULL && valido == 0;i++,arr++){
+        valido = validaCondicoes(arr,p,num) && validaRestricoes(arr,mj,pilha1);
+    }
+    return valido;
+}
+
 
 PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int pilha1 , int pilha2 , int num){
-    int lim = mj->numLinhasMatriz;
-    if(pilha1 > lim) return invalid;
-    int valido = 0;
-    PilhaDeCartas * pilhaAtual = (mj->linhasMatriz + pilha1);
-    if(pilhaAtual->numCartasPilha < num ) return invalid;
-    ArrayFlagsPegar * arr = encontraMovsTag(gs,pilhaAtual->tagPilha);
-    valido = verificaCondicoesPilha(arr,pilhaAtual,num);
-    if(valido) return valid;
+    if(mov==NULL) return invalid;
+    PilhaDeCartas * pilhaOrig = (mj->linhasMatriz + pilha1) , * pilhaDest = (mj->linhasMatriz + pilha2);
+    if(pilhaOrig->numCartasPilha < num ) return invalid;
+    Boolean validoPegavel = verificaPegarCartasValido(mov,pilhaOrig,num,mj,pilha1) , validoColocavel = 0;
+    int norig = pilhaOrig->numCartasPilha - 1, ndest = pilhaDest->numCartasPilha - 1;
+    if(validoPegavel){
+        validoColocavel = verifyColocarCartas(mov,pilhaOrig->cartasPilha + norig - num,pilhaDest->cartasPilha + ndest);
+    }
+    if(validoColocavel && validoPegavel) return valid;
     else return invalid;
 }
 
 
-PossiveisJogadas handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1,int * pilha2,int numCartas){
+PossiveisJogadas handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1,int pilha2,int numCartas){
     
 }
 
@@ -35,7 +77,10 @@ PossiveisJogadas efetuaJogadaMovimentoCartas(GameSettings * gs , MatrizJogo * mj
     if(tag1!=(-1) && tag2!=(-1)){
         MovimentoEntrePilhas * mov = comparaTags(gs->jogo.movimentoPilhas,tag1,tag2,gs->jogo.numCondicoesMov);
         estadoJogada = jogadaValida(mov,mj,pilha1,pilha2,numCartas);
-        if(estadoJogada == valid) estadoJogada = handleEfetuaJogada(gs,mj,undoState,pilha1,&pilha2,numCartas);
+        if(estadoJogada == valid){
+            estadoJogada = handleEfetuaJogada(gs,mj,undoState,pilha1,pilha2,numCartas);
+            efetuaAutoJogada(gs,mj,undoState); //NECESSITA SER FEITA
+        }
     }
     else estadoJogada = invalid;
     return estadoJogada;
