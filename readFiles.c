@@ -179,7 +179,7 @@ void readInstructions(GameSettings * gs , struct dirent * entry,MatrizJogo * mj)
     fclose(file);
 }
 
-int readNewGame(GameSettings * gs , String str , MatrizJogo * mj){
+int readGameInstructions(GameSettings * gs , String str , MatrizJogo * mj){
     struct dirent * entry;
     DIR * dir = opendir("paciencias");
     int found=0;
@@ -190,12 +190,42 @@ int readNewGame(GameSettings * gs , String str , MatrizJogo * mj){
         }
     }
     closedir(dir);
-    if(!found) return 1;
-    return 0;
+    return (!found);
 }
 
-int readExistingGame(GameSettings * gs , String str , MatrizJogo * mj){
+void initMatriz(MatrizJogo * mj , int index , char * line){
     
+}
+
+int readGameFiles(GameSettings * gs , MatrizJogo * mj , struct dirent * entry){
+    int i=0 , found=0;
+    char path[100];
+    snprintf(path,sizeof(path),"paciencias/%s",entry->d_name);
+    FILE * file = fopen(path,"r");
+    char line[50] = fgets(line,sizeof(line),file), nomeJogo[50];
+    sscanf("%s",nomeJogo,line);
+    found = readGameInstructions(gs,nomeJogo,mj);
+    while(fgets(line,sizeof(line),file)){
+        initMatriz(mj,i++,line);
+    }
+    fclose(file);
+    return (!found);
+}
+
+
+int readExistingGame(GameSettings * gs , String str , MatrizJogo * mj){
+    struct dirent * entry;
+    DIR * dir = opendir("paciencias");
+    int foundDir = 0 , foundFile;
+    while((entry = readdir(dir)) != NULL && !foundDir){
+        if(strcmp(entry->d_name,str) == 0){
+            foundDir = 1 ;
+            foundFile = readGameFiles(gs,mj,entry);
+        }
+    }
+    closedir(dir);
+    if(foundDir && foundFile) return 0;
+    return 1;
 }
 
 int readFiles(GameSettings * gs,MatrizJogo * mj){
@@ -213,7 +243,9 @@ int readFiles(GameSettings * gs,MatrizJogo * mj){
             return readExistingGame(gs,str,mj);
         break;
         default : 
-            return readNewGame(gs,str,mj);
+            int ret = readGameInstructions(gs,str,mj);
+            randomizaJogo(gs,mj);
+            return ret;
         break;
     }
 }

@@ -48,7 +48,6 @@ int main(void){
         printf("ERRO!! Não introduziu o nome do ficheiro ou introduziu-o incorretamente\n");
         return 1;
     }
-    randomizaJogo(&currentGame,&mj);
     gameLoop(&currentGame,&mj,&undoState);
     memoryFree(currentGame,mj,undoState);
     return 0;

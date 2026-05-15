@@ -7,6 +7,8 @@
 6-- fazer jogadaValida
 7-- INIT arrC e arrP funcoes
 8-- Verifica Condicoes Pilha com funcoes de arrC e arrP de mov
+9-- FGETS ATUALIZA LINHA??
+10-- INIT MATRIZ 
 
 
 

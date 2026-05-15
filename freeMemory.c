@@ -13,7 +13,8 @@ void freeMatrizJogo(MatrizJogo mj){
 void freeAutoMoves(JogoStruct jogo,int n){
     AutoMoves * tempo = jogo.autoMoves;
     for(int i=0;i<n;i++,tempo++){
-        free(tempo->arr);
+        free(tempo->arrC);
+        free(tempo->arrP);
     }
     free(jogo.autoMoves);
 }
@@ -22,10 +23,11 @@ void freeGameSettings(GameSettings gs){
     free(gs.winCon);
     JogoStruct jogo = gs.jogo;
     free(jogo.pilhas);
-    int n = jogo.numCondicoes , n1 = jogo.qntdAutoMoves;
+    int n = jogo.numCondicoesMov , n1 = jogo.qntdAutoMoves;
     MovimentoEntrePilhas * temp = jogo.movimentoPilhas;
     for(int i=0;i<n;i++,temp++){
-        free(temp->arr);
+        free(temp->arrP);
+        free(temp->arrC);
     }
     free(jogo.movimentoPilhas);
     freeAutoMoves(jogo,n1);
