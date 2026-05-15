@@ -11,9 +11,9 @@ int verificaCondicoesPilha(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
 
 PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int pilha1 , int pilha2 , int num){
     int lim = mj->numLinhasMatriz;
-    if(pilha > lim) return invalid;
+    if(pilha1 > lim) return invalid;
     int valido = 0;
-    PilhaDeCartas * pilhaAtual = (mj->linhasMatriz + pilha);
+    PilhaDeCartas * pilhaAtual = (mj->linhasMatriz + pilha1);
     if(pilhaAtual->numCartasPilha < num ) return invalid;
     ArrayFlagsPegar * arr = encontraMovsTag(gs,pilhaAtual->tagPilha);
     valido = verificaCondicoesPilha(arr,pilhaAtual,num);

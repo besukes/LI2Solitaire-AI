@@ -96,7 +96,8 @@ typedef struct WinCondition{
 }WinCondition;
 
 typedef struct OrdemFicheiro{
-    int tamanho;
+    int tamanhoMemoria;
+    int tamanhoReal;
     String instructions;
 }OrdemFicheiro;
 

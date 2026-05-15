@@ -20,7 +20,8 @@ void initJogoStruct(GameSettings * gs){
 }
 
 void initFileStruct(GameSettings * gs){
-    (gs->file).tamanho=0;
+    (gs->file).tamanhoMemoria=0;
+    (gs->file).tamanhoReal=0;
     (gs->file).instructions=NULL;
 }
 
@@ -33,6 +34,7 @@ GameSettings initStructs(void){
     gs.winCon = NULL;
     gs.jogo.qntdAutoMoves = 0;
     gs.jogo.autoMoves = NULL;
+    return gs;
 }
 
 MatrizJogo initMatrizJogo(void){
