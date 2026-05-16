@@ -2,15 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-void randomizaJogo(GameSettings * gs , MatrizJogo * mj){
-    int n = gs->numBaralhos , arrCartas[n];
-    initArrCartas(arrCartas,n);
-    shuffleArray(arrCartas,n);
-    initMatrizCartasJogo(arrCartas,mj);
-}
-
-
 void initMatrizCartasJogo(int arrayCartas[],MatrizJogo * mj){
     int i,j,counter=0;
     PilhaDeCartas * p = mj->linhasMatriz;
@@ -27,9 +18,18 @@ void shuffleArray(int arrayCartas[] , int n){
 
 }
 
-
 void initArrCartas(int arrCartas[] , int n){
     for(int i=0;i<n;i++){
         arrCartas[i] = i + 1;
     }
 }
+
+void randomizaJogo(GameSettings * gs , MatrizJogo * mj){
+    int n = gs->numBaralhos , arrCartas[n];
+    initArrCartas(arrCartas,n);
+    shuffleArray(arrCartas,n);
+    initMatrizCartasJogo(arrCartas,mj);
+}
+
+
+

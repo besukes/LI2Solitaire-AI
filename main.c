@@ -4,7 +4,6 @@
 
 
 PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * undoState){
-    int pilha1 , pilha2 , numCartas , valido;
     char jogada = 0;
     PossiveisJogadas estadoJogada = valid;
     printf("Indique a jogada que quer efetuar :\n" 
@@ -16,7 +15,7 @@ PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMo
     );
     scanf("%c",&jogada);
     estadoJogada = recebeInput(jogada);
-    if(estadoJogada==undo) undoMove(mj,undoState);
+    if(estadoJogada==undo) undoMove(mj,undoState); //tem que se adicionar ao .h
     else if(estadoJogada==valid) estadoJogada = efetuaJogadaMovimentoCartas(gs,mj,undoState);
     return estadoJogada;
 }
@@ -25,7 +24,7 @@ void gameLoop(GameSettings * gs , MatrizJogo * mj,LastMoveLL * undoState){
     PossiveisJogadas option = valid;
     while(option != quit && option != GameWon ){
         if(option == invalid) printf("Jogada inválida , tente outra vez , mas algo diferente!!\n");
-        desenhaInterfaceJogo(gs,mj);
+        desenhaInterfaceJogo(gs,*mj);
         option = interfacePessoaJogo(gs,mj,undoState);
     }
     if(option==GameWon) printf("Parabéns , ganhas-te o jogo!!\n");
@@ -42,7 +41,7 @@ int main(void){
     GameSettings currentGame = initStructs();
     MatrizJogo mj = initMatrizJogo();
     LastMoveLL undoState = NULL;
-    int notSuccess = readfiles(&currentGame,&mj);
+    int notSuccess = readFiles(&currentGame,&mj);
     //Se houver erro com o ficheiro success estara em 1
     if(notSuccess){
         printf("ERRO!! Não introduziu o nome do ficheiro ou introduziu-o incorretamente\n");

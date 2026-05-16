@@ -7,7 +7,7 @@ int valorCarta(int c){
     return c;
 }
 
-int exp(int base,int expo){
+int exponenciacao(int base,int expo){
     int ret=1;
     for(int i=0;i<expo;i++){
         ret*=base;
@@ -18,7 +18,7 @@ int exp(int base,int expo){
 char * criarTag(long * tag,char * line){
     int j=0;
     while(*line != ' '){
-        *tag+=(*line - 64)*exp(27,j++); //-64 por serem letras maisculas ('A' = 65)
+        *tag+=(*line - 64)*exponenciacao(27,j++); //-64 por serem letras maisculas ('A' = 65)
         // Multiplicamos por 27^j para cada tag ser unica (26 letras no alfabeto e apenas letras maiusculas)
         line++;
     }
@@ -35,7 +35,7 @@ int numCaracteres(char * line){
 int strToNumber(char * line){
     int i=numCaracteres(line) , num = 0;
     while(*line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
-        num = (*line-48)*exp(10,i--);
+        num = (*line-48)*exponenciacao(10,i--);
         line++;
     }
     return num;
@@ -53,7 +53,7 @@ void calculaRulesPilha(RegrasPilha * rp , char * line){
 }
 
 
-MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,int tagOrig , int tagDest , int n)
+MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,long tagOrig , long tagDest , int n)
 {
     for (int i = 0; i < n; i++) {
         if (mp[i].tagOrig == tagOrig && mp[i].tagDest == tagDest) {

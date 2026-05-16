@@ -30,9 +30,9 @@ typedef int (*FlagFunctionsP)(Carta,Carta);
 
 typedef int (*FlagFunctionsC) (Carta,Carta);
 
-typedef int (*FlagFunctionsR) (int,MatrizJogo);
+typedef int (*FlagFunctionsR) (int,MatrizJogo *);
 
-typedef int (*FlagFunctionsV) (int,MatrizJogo);
+typedef int (*FlagFunctionsV) (int,MatrizJogo *);
 
 typedef struct LastMoveLL{
     int indexPilhaAnterior;
@@ -117,18 +117,28 @@ typedef struct game{
 GameSettings initStructs(void);
 MatrizJogo initMatrizJogo(void);
 void inicializaAutoMoves(AutoMoves * am , int tagOrig , int tagDest);
-void initFlagFuncArrayC(ArrayFlagsColocar * arr1);
-void initFlagFuncArrayP(ArrayFlagsPegar * arr2);
+void initArrC(MovimentoEntrePilhas * mov);
+void initArrP(MovimentoEntrePilhas * mov);
+void headLinkedList(LastMoveLL * l , int indexAnterior, int indexNovo, int numCartasMovidas , MatrizJogo matriz);
+
 
 //Modulo readFiles.c
 int readFiles(GameSettings * gs,MatrizJogo * mj);
 
+
 //Modulo simpleFunctions.c
-int exp(int base,int expo);
+int valorCarta(int c);
+int exponenciacao(int base,int expo);
 char * criarTag(long * tag,char * line);
+int numCaracteres(char * line);
 int strToNumber(char * line);
 void calculaRulesPilha(RegrasPilha * rp , char * line);
-MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,int tagOrig , int tagDest , int n);
+MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,long tagOrig , long tagDest , int n);
+long procuraTag(MatrizJogo * mj , int pilha);
+char convertToNaipe(int div);
+int pertenceString(char c , char str[]);
+
+
 
 //Modulo flagFunctions.c
 int pilhaVazia(int linha,MatrizJogo * m);
@@ -138,5 +148,23 @@ FlagFunctionsP flagPegavelCalc(char * line);
 FlagFunctionsP flagPegavelCalcAux(char * line);
 FlagFunctionsR flagRestricoesCalc(char * line);
 
+
 //Modulo randomizeCards.c
 void randomizaJogo(GameSettings * gs , MatrizJogo * mj);
+
+
+//Modulo gameplayHandle.c
+PossiveisJogadas efetuaJogadaMovimentoCartas(GameSettings * gs , MatrizJogo * mj , LastMoveLL * undoState);
+PossiveisJogadas recebeInput(char jogada);
+void pedeJogadaUtilizador(int * p1 , int * p2 ,int * num);
+
+
+//Modulo undoMove.c
+void undoMove(MatrizJogo * mj , LastMoveLL * lm); // tem que se fazer
+
+//Modulo userInterface.c
+void desenhaInterfaceJogo(GameSettings * gs,MatrizJogo mj); // tem que se fazer
+
+
+//Modulo freeMemory.c
+void memoryFree(GameSettings gs , MatrizJogo mj , LastMoveLL lm);

@@ -2,8 +2,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <string.h>
-
-
+#include <stdlib.h>
 
 
 int initEVerificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
@@ -20,8 +19,8 @@ int initEVerificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
             return 2;
         }
         else if(pertenceString(*line,str3)){
-            mov->numMovsC++;
-            initArrC(mov);
+            mov->numMovsP++;
+            initArrP(mov);
             return 3;
         }
         else return 4;
@@ -88,13 +87,13 @@ void tipoInstruction(GameSettings * gs , char * line){
     line = criarTag(&tag,line);
     RegrasPilha * pilhaAtual = gs->jogo.pilhas + n - 1;
     pilhaAtual->tag = tag;
-    calculaRulesPilha(&pilhaAtual,line);
+    calculaRulesPilha(pilhaAtual,line);
 }
 
 void initInstruction(GameSettings * gs , char * line,MatrizJogo * mj){
     long insTag=0;
     int num = ++mj->numLinhasMatriz;
-    num = criarTag(&insTag,line);
+    line = criarTag(&insTag,line);
     mj->linhasMatriz = realloc(mj->linhasMatriz,sizeof(struct PilhaDeCartas)*num);
     PilhaDeCartas * p = mj->linhasMatriz + num - 1;
     p->tagPilha = insTag;
@@ -169,7 +168,7 @@ void readInstructionLine(GameSettings * gs , char * line,MatrizJogo * mj){
 }
 
 void readInstructions(GameSettings * gs , struct dirent * entry,MatrizJogo * mj){
-    char path[100];
+    char path[267];
     snprintf(path,sizeof(path),"paciencias/%s",entry->d_name);
     FILE * file = fopen(path,"r");
     char line[50];
@@ -199,10 +198,11 @@ void initMatriz(MatrizJogo * mj , int index , char * line){
 
 int readGameFiles(GameSettings * gs , MatrizJogo * mj , struct dirent * entry){
     int i=0 , found=0;
-    char path[100];
+    char path[267];
     snprintf(path,sizeof(path),"paciencias/%s",entry->d_name);
     FILE * file = fopen(path,"r");
-    char line[50] = fgets(line,sizeof(line),file), nomeJogo[50];
+    char line[50] , nomeJogo[50];
+    fgets(line,sizeof(line),file);
     sscanf("%s",nomeJogo,line);
     found = readGameInstructions(gs,nomeJogo,mj);
     while(fgets(line,sizeof(line),file)){
@@ -230,14 +230,14 @@ int readExistingGame(GameSettings * gs , String str , MatrizJogo * mj){
 
 int readFiles(GameSettings * gs,MatrizJogo * mj){
     int op;
-    char * str;
+    char * str = NULL;
     printf("Olá jogador.Para continuar insira o número da opção que melhor descreve oque quer fazer :\n "
             "1- LOAD NEW GAME\n"
             "2- START NEW GAME\n"
             "DEFAULT - START NEW GAME\n");
     scanf("%d",&op);
     printf("Insira o nome do ficheiro do qual pretende fazer uso para jogar : \n");
-    scanf("%s",&str);
+    scanf("%s",str);
     switch(op){
         case 1 :
             return readExistingGame(gs,str,mj);

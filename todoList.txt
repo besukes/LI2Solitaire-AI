@@ -2,7 +2,6 @@
 2---shuffle cards no randomizeCards.c
 3---Salvar o jogo
 4---userInterface.c (tudo)
-5--- HANDLE JOGADA -> modulo gameplayHandle.c
 6-- fazer jogadaValida
 9-- FGETS ATUALIZA LINHA??
 10-- INIT MATRIZ 

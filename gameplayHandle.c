@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void efetuaAutoJogada(GameSettings * gs,MatrizJogo * mj,LastMoveLL * lm){ //NECESSITA SER FEITA
 
+}
 
 int verifyColocarCartas(MovimentoEntrePilhas * mov , Carta * ultimaCartaOrig , Carta * cartaDest){
     int valido = 1 , n = mov->numMovsC;
@@ -34,8 +36,8 @@ int validaCondicoes(ArrayFlagsPegar * arr , PilhaDeCartas * p , int num){
 int validaRestricoes(ArrayFlagsPegar * arr , MatrizJogo * mj , int pilha1){
     int lim = arr->numRestricoes , valid = 1;
     for(int i=0;i<lim && valid == 1;i++){
-        int (*func)(int,MatrizJogo) = arr->flagRestricoes[i];
-        valid = valid && func(pilha1,*mj);
+        int (*func)(int,MatrizJogo *) = arr->flagRestricoes[i];
+        valid = valid && func(pilha1,mj);
     }
     return valid;
 }
@@ -64,7 +66,7 @@ PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int
 }
 
 
-PossiveisJogadas handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1,int pilha2,int numCartas){
+void handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1,int pilha2,int numCartas){
     PilhaDeCartas * pilhaDest = mj->linhasMatriz + pilha2,
                   * pilhaOrig = mj->linhasMatriz + pilha1;
     int numAnt = pilhaDest->numCartasPilha , numNovaPilha = numAnt + numCartas , 
@@ -77,7 +79,6 @@ PossiveisJogadas handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMov
     headLinkedList(lm,pilha1,pilha2,numCartas,*mj);
     pilhaOrig->numCartasPilha-=numCartas;
     pilhaOrig->cartasPilha = realloc(pilhaOrig->cartasPilha,sizeof(struct PilhaDeCartas)*numOrig);
-    return valid;
 }
 
 
@@ -90,8 +91,8 @@ PossiveisJogadas efetuaJogadaMovimentoCartas(GameSettings * gs , MatrizJogo * mj
         MovimentoEntrePilhas * mov = comparaTags(gs->jogo.movimentoPilhas,tag1,tag2,gs->jogo.numCondicoesMov);
         estadoJogada = jogadaValida(mov,mj,pilha1,pilha2,numCartas);
         if(estadoJogada == valid){
-            estadoJogada = handleEfetuaJogada(gs,mj,undoState,pilha1,pilha2,numCartas);
-            efetuaAutoJogada(gs,mj,undoState); //NECESSITA SER FEITA
+            handleEfetuaJogada(gs,mj,undoState,pilha1,pilha2,numCartas);
+            efetuaAutoJogada(gs,mj,undoState);
         }
     }
     else estadoJogada = invalid;
