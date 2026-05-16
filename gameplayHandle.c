@@ -65,7 +65,19 @@ PossiveisJogadas jogadaValida(MovimentoEntrePilhas * mov , MatrizJogo * mj , int
 
 
 PossiveisJogadas handleEfetuaJogada(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * lm , int pilha1,int pilha2,int numCartas){
-    
+    PilhaDeCartas * pilhaDest = mj->linhasMatriz + pilha2,
+                  * pilhaOrig = mj->linhasMatriz + pilha1;
+    int numAnt = pilhaDest->numCartasPilha , numNovaPilha = numAnt + numCartas , 
+        numOrig = pilhaDest->numCartasPilha - numCartas;
+    pilhaDest->numCartasPilha +=numCartas;
+    pilhaDest->cartasPilha = realloc(pilhaDest->cartasPilha,sizeof(struct PilhaDeCartas)*numNovaPilha);
+    for(int i=numAnt,j= numOrig;i<numNovaPilha;i++,j++){
+        *(pilhaDest->cartasPilha + i) = *(pilhaOrig->cartasPilha + j);
+    }
+    headLinkedList(lm,pilha1,pilha2,numCartas,*mj);
+    pilhaOrig->numCartasPilha-=numCartas;
+    pilhaOrig->cartasPilha = realloc(pilhaOrig->cartasPilha,sizeof(struct PilhaDeCartas)*numOrig);
+    return valid;
 }
 
 
