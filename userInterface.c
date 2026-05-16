@@ -79,7 +79,6 @@ void splashScreen() {
     printCentered(" |___/\\___/|_|_|\\__\\__,_|_|_| \\___|", TERMINAL_WIDTH);
     printf("\n");
     printCentered("[ LI2 Game Engine v0.1 ]", TERMINAL_WIDTH);
-    printCentered("um projeto feito com muito cafe", TERMINAL_WIDTH);
     printf("\n");
 
     printHLine(TERMINAL_WIDTH, '=');
@@ -249,11 +248,7 @@ void desenhaInterfaceJogo(GameSettings * gs, MatrizJogo mj) {
     printf("\n");
     printHLine(TERMINAL_WIDTH, '-');
 
-    // menu de acoes em baixo
-    printf(YELLOW "  [J]" RESET " Jogar  ");
-    printf(YELLOW "  [D]" RESET " Desfazer  ");
-    printf(YELLOW "  [S]" RESET " Salvar  ");
-    printf(YELLOW "  [Q]" RESET " Sair\n");
+    
 
     printHLine(TERMINAL_WIDTH, '-');
     printf("\n");

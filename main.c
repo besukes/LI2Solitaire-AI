@@ -5,12 +5,20 @@
 // cores basicas so para este ficheiro
 #define RED   "\033[31m"
 #define RESET "\033[0m"
-
+#define YELLOW "\033[33m"
+    
 
 PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * undoState){
     char jogada = 0;
     PossiveisJogadas estadoJogada = valid;
-    // limpa o buffer antes de ler (evita problemas com o \n do scanf anterior)
+
+    printf(YELLOW "  [J]" RESET " Jogar  ");
+    printf(YELLOW "  [D]" RESET " Desfazer  ");
+    printf(YELLOW "  [S]" RESET " Salvar  ");
+    printf(YELLOW "  [Q]" RESET " Sair\n");
+    printf("  >> ");
+    fflush(stdout);
+
     while(getchar() != '\n');
     scanf("%c",&jogada);
     estadoJogada = recebeInput(jogada);
@@ -23,8 +31,8 @@ PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMo
 void gameLoop(GameSettings * gs , MatrizJogo * mj,LastMoveLL * undoState){
     PossiveisJogadas option = valid;
     while(option != quit && option != GameWon ){
-        desenhaInterfaceJogo(gs,*mj);
         option = interfacePessoaJogo(gs,mj,undoState);
+        desenhaInterfaceJogo(gs,*mj);
     }
     if(option==GameWon){
         animacaoVitoria();
