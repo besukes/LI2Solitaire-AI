@@ -49,17 +49,15 @@ void gameLoop(GameSettings * gs , MatrizJogo * mj,LastMoveLL * undoState){
 
 int main(void){
     splashScreen();
-
     GameSettings currentGame = initStructs();
     MatrizJogo mj = initMatrizJogo();
     LastMoveLL undoState = NULL;
-
     int notSuccess = readFiles(&currentGame,&mj);
+    printf("nBaralhos %d",currentGame.numBaralhos );
     if(notSuccess){
         printf(RED "ERRO! Ficheiro nao encontrado ou invalido.\n" RESET);
         return 1;
     }
-
     gameLoop(&currentGame,&mj,&undoState);
     memoryFree(currentGame,mj,undoState);
     return 0;

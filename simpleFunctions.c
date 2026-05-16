@@ -17,10 +17,12 @@ int exponenciacao(int base,int expo){
 
 char * criarTag(long * tag,char * line){
     int j=0;
-    while(*line != ' '){
-        *tag+=(*line - 64)*exponenciacao(27,j++); //-64 por serem letras maisculas ('A' = 65)
+    *tag = 0;
+    while(*line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
+        *tag+=(*line - 64)*exponenciacao(27,j); //-64 por serem letras maisculas ('A' = 65)
         // Multiplicamos por 27^j para cada tag ser unica (26 letras no alfabeto e apenas letras maiusculas)
         line++;
+        j++;
     }
     return (line+1);
 }
@@ -28,14 +30,18 @@ char * criarTag(long * tag,char * line){
 
 int numCaracteres(char * line){
     int i=(-1);
-    while(*line != ' ') i++;
+    while(*line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
+        i++;
+        line++;
+    }
     return i;
 }
 
 int strToNumber(char * line){
     int i=numCaracteres(line) , num = 0;
-    while(*line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
-        num = (*line-48)*exponenciacao(10,i--);
+    while(i > (-1) && *line != '#' && *line!='\n' && *line!=' ' && *line != '\0'){
+        num = (*line-48)*exponenciacao(10,i);
+        i--;
         line++;
     }
     return num;
@@ -49,12 +55,14 @@ void calculaRulesPilha(RegrasPilha * rp , char * line){
         if(*line == '=') rp->todaPilhaVisivel = 1;
         else if(*line == '^') rp->cartaTopoVisivel = 1;
         else if(*line == '1') rp->existeMaxCartas = 1;
+        line++;
     }
 }
 
 
 MovimentoEntrePilhas * comparaTags (MovimentoEntrePilhas * mp ,long tagOrig , long tagDest , int n)
 {
+    if(mp == NULL) return mp;
     for (int i = 0; i < n; i++) {
         if (mp[i].tagOrig == tagOrig && mp[i].tagDest == tagDest) {
             return &mp[i];

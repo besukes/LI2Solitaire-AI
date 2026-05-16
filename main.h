@@ -14,7 +14,7 @@ typedef struct Carta{
 }Carta;
 
 typedef struct PilhaDeCartas{
-    int tagPilha;
+    long tagPilha;
     int numCartasPilha;
     struct Carta * cartasPilha;
 }PilhaDeCartas;
@@ -120,7 +120,7 @@ void inicializaAutoMoves(AutoMoves * am , int tagOrig , int tagDest);
 void initArrC(MovimentoEntrePilhas * mov);
 void initArrP(MovimentoEntrePilhas * mov);
 void headLinkedList(LastMoveLL * l , int indexAnterior, int indexNovo, int numCartasMovidas , MatrizJogo matriz);
-
+void initColunasMatriz(MatrizJogo * mj);
 
 //Modulo readFiles.c
 int readFiles(GameSettings * gs,MatrizJogo * mj);

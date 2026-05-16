@@ -29,7 +29,7 @@ int initEVerificaTipoFlag(MovimentoEntrePilhas * mov , char * line){
 
 
 void addMovInstruction(MovimentoEntrePilhas * mov,long tagDestino , char * line){
-    while(*line != '#' && *line!='\n' && *line!=' '){
+    while(*line != '#' && *line!='\n' && *line!=' '&& *line!='\0'){
         int u = initEVerificaTipoFlag(mov,line);
         int n1= mov->numMovsC , n2 = mov->numMovsP;
         if(u==1) (mov->arrP + n1 - 1)->flagsPegavel[mov->arrP->numFlagsPegavel ++] = flagPegavelCalc(line);
@@ -95,6 +95,7 @@ void initInstruction(GameSettings * gs , char * line,MatrizJogo * mj){
     int num = ++mj->numLinhasMatriz;
     line = criarTag(&insTag,line);
     mj->linhasMatriz = realloc(mj->linhasMatriz,sizeof(struct PilhaDeCartas)*num);
+    if(mj->linhasMatriz == NULL) printf("Realloc failed in initInstruction\n");
     PilhaDeCartas * p = mj->linhasMatriz + num - 1;
     p->tagPilha = insTag;
     p->cartasPilha = NULL;
@@ -123,10 +124,10 @@ void jogoInstruction(GameSettings * gs,char * line){
     int i;
     char * temp = line;
     //Para verificar o tamanho do nome do jogo
-    for(i=0;*temp != '#' && *temp!='\n' && *temp!=' ';i++,temp++);
+    for(i=0;*temp != '#' && *temp!='\n' && *temp!=' '&& *line!='\0';i++,temp++);
     gs->jogo.nomeJogo = malloc(sizeof(char)*i + 1);
     char * nome = gs->jogo.nomeJogo;
-    for(;*line != '#' && *line!='\n' && *line!=' ';i++,nome++,line++){
+    for(;*line != '#' && *line!='\n' && *line!=' ' && *line!='\0';nome++,line++){
         *nome=*line;
     }
     *nome = '\0';
@@ -149,7 +150,7 @@ void readInstructionLineAux(GameSettings * gs, char * line){
     }
 }
 
-void readInstructionLine(GameSettings * gs , char * line,MatrizJogo * mj){
+void readInstructionLine(GameSettings * gs , char * line , MatrizJogo * mj){
     switch(*line){
         case 'M' :
             movInstruction(gs,line+4);
@@ -171,14 +172,14 @@ void readInstructions(GameSettings * gs , struct dirent * entry,MatrizJogo * mj)
     char path[267];
     snprintf(path,sizeof(path),"paciencias/%s",entry->d_name);
     FILE * file = fopen(path,"r");
-    char line[50];
+    char line[100];
     while(fgets(line,sizeof(line),file)){
         readInstructionLine(gs,line,mj);
     }
     fclose(file);
 }
 
-int readGameInstructions(GameSettings * gs , String str , MatrizJogo * mj){
+int readGameInstructions(GameSettings * gs , char str[51] , MatrizJogo * mj){
     struct dirent * entry;
     DIR * dir = opendir("paciencias");
     int found=0;
@@ -192,60 +193,58 @@ int readGameInstructions(GameSettings * gs , String str , MatrizJogo * mj){
     return (!found);
 }
 
-void initMatriz(MatrizJogo * mj , int index , char * line){
+void loadJogoAntigo(MatrizJogo * mj , int index , char * line){
     
 }
 
 int readGameFiles(GameSettings * gs , MatrizJogo * mj , struct dirent * entry){
     int i=0 , found=0;
-    char path[267];
+    char path[267] , line[100];
     snprintf(path,sizeof(path),"paciencias/%s",entry->d_name);
     FILE * file = fopen(path,"r");
-    char line[50] , nomeJogo[50];
-    fgets(line,sizeof(line),file);
-    sscanf("%s",nomeJogo,line);
-    found = readGameInstructions(gs,nomeJogo,mj);
     while(fgets(line,sizeof(line),file)){
-        initMatriz(mj,i++,line);
+        loadJogoAntigo(mj,i++,line);
     }
     fclose(file);
     return (!found);
 }
 
 
-int readExistingGame(GameSettings * gs , String str , MatrizJogo * mj){
+int readExistingGame(GameSettings * gs , char regrasJogo[51] , char loadJogo[51] , MatrizJogo * mj){
+    int found = readGameInstructions(gs,regrasJogo,mj);
     struct dirent * entry;
     DIR * dir = opendir("paciencias");
-    int foundDir = 0 , foundFile;
-    while((entry = readdir(dir)) != NULL && !foundDir){
-        if(strcmp(entry->d_name,str) == 0){
-            foundDir = 1 ;
-            foundFile = readGameFiles(gs,mj,entry);
+    while((entry = readdir(dir)) != NULL && !found){
+        if(strcmp(entry->d_name,loadJogo) == 0){
+            found = found & 1;
+            readGameFiles(gs,mj,entry);
         }
     }
     closedir(dir);
-    if(foundDir && foundFile) return 0;
-    return 1;
+    return (!found);
 }
 
 int readFiles(GameSettings * gs,MatrizJogo * mj){
-    int op;
-    char * str = NULL;
-    printf("Olá jogador.Para continuar insira o número da opção que melhor descreve oque quer fazer :\n "
+    int op , ret = 0 ;
+    char str[51] ,str2[51];
+    printf("Olá jogador.Para continuar insira o número da opção que melhor descreve oque quer fazer :\n"
             "1- LOAD NEW GAME\n"
             "2- START NEW GAME\n"
             "DEFAULT - START NEW GAME\n");
     scanf("%d",&op);
-    printf("Insira o nome do ficheiro do qual pretende fazer uso para jogar : \n");
-    scanf("%s",str);
+    printf("Insira o nome do ficheiro do qual pretende fazer uso para jogar (máximo 50 caracteres): \n");
+    scanf(" %50s",str);
     switch(op){
         case 1 :
-            return readExistingGame(gs,str,mj);
+            printf("Insira o nome do jogo guardado que quer utilizar : \n");
+            scanf(" %50s",str2);
+            ret = readExistingGame(gs,str,str2,mj);
         break;
-        default : 
-            int ret = readGameInstructions(gs,str,mj);
+        case 2 : 
+            ret = readGameInstructions(gs,str,mj);
+            initColunasMatriz(mj);
             randomizaJogo(gs,mj);
-            return ret;
         break;
     }
+    return ret;
 }

@@ -72,3 +72,14 @@ void headLinkedList(LastMoveLL * l , int indexAnterior, int indexNovo, int numCa
     addCartasLinkedList(novo,indexAnterior,numCartasMovidas,matriz);
     *l=novo;
 }
+
+
+void initColunasMatriz(MatrizJogo * mj){
+    int lim = mj->numLinhasMatriz;
+    PilhaDeCartas * p = mj->linhasMatriz;
+    if(p!=NULL){
+        for(int i=0;i<lim;i++){
+            (p+i)->cartasPilha = malloc(sizeof(struct Carta)*(p+i)->numCartasPilha);
+        }
+    }
+}

@@ -6,6 +6,7 @@
 9-- FGETS ATUALIZA LINHA??
 10-- INIT MATRIZ 
 11 -- efetuaAutoJogada ->modulo gameplayHandle.c
+1-- PROBLEMAS INSTRUCTIONS MOVS E INITS
 
 
 
