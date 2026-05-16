@@ -225,6 +225,13 @@ int readExistingGame(GameSettings * gs , char regrasJogo[51] , char loadJogo[51]
     return (!found);
 }
 
+
+int existingGame(GameSettings * gs , char str1[51] , char str2[51] , MatrizJogo * mj){
+    printf("Insira o nome do jogo guardado que quer utilizar : \n");
+    scanf(" %50s",str2);
+    return readExistingGame(gs,str1,str2,mj);
+}
+
 int readFiles(GameSettings * gs,MatrizJogo * mj){
     int op , ret = 0 ;
     char str[51] ,str2[51];
@@ -237,9 +244,7 @@ int readFiles(GameSettings * gs,MatrizJogo * mj){
     scanf(" %50s",str);
     switch(op){
         case 1 :
-            printf("Insira o nome do jogo guardado que quer utilizar : \n");
-            scanf(" %50s",str2);
-            ret = readExistingGame(gs,str,str2,mj);
+            ret = existingGame(gs,str,str2,mj);
         break;
         case 2 : 
             ret = readGameInstructions(gs,str,mj);

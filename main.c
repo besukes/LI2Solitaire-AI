@@ -7,18 +7,19 @@
 #define RESET "\033[0m"
 #define YELLOW "\033[33m"
     
-
-PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * undoState){
-    char jogada = 0;
-    PossiveisJogadas estadoJogada = valid;
-
+void printJogadasUtilizador(void){
     printf(YELLOW "  [J]" RESET " Jogar  ");
     printf(YELLOW "  [D]" RESET " Desfazer  ");
     printf(YELLOW "  [S]" RESET " Salvar  ");
     printf(YELLOW "  [Q]" RESET " Sair\n");
     printf("  >> ");
     fflush(stdout);
+}
 
+PossiveisJogadas interfacePessoaJogo(GameSettings * gs , MatrizJogo * mj ,LastMoveLL * undoState){
+    char jogada = 0;
+    PossiveisJogadas estadoJogada = valid;
+    printJogadasUtilizador();
     while(getchar() != '\n');
     scanf("%c",&jogada);
     estadoJogada = recebeInput(jogada);
