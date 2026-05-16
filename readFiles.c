@@ -212,6 +212,7 @@ int readGameFiles(GameSettings * gs , MatrizJogo * mj , struct dirent * entry){
 
 int readExistingGame(GameSettings * gs , char regrasJogo[51] , char loadJogo[51] , MatrizJogo * mj){
     int found = readGameInstructions(gs,regrasJogo,mj);
+    initColunasMatriz(mj);
     struct dirent * entry;
     DIR * dir = opendir("paciencias");
     while((entry = readdir(dir)) != NULL && !found){
