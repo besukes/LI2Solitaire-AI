@@ -34,12 +34,12 @@ typedef int (*FlagFunctionsR) (int,MatrizJogo *);
 
 typedef int (*FlagFunctionsV) (int,MatrizJogo *);
 
-typedef struct LastMoveLL{
+typedef struct LastMoveLLNode{
     int indexPilhaAnterior;
     int indexNovaPilha;
     int numCartasMovidas;
     Carta * cartasMovidas;
-    struct LastMoveLL * prox; // Aponta para o proximo elemento da lista
+    struct LastMoveLLNode * prox; // Aponta para o proximo elemento da lista
 } * LastMoveLL;
 
 
@@ -160,10 +160,16 @@ void pedeJogadaUtilizador(int * p1 , int * p2 ,int * num);
 
 
 //Modulo undoMove.c
-void undoMove(MatrizJogo * mj , LastMoveLL * lm); // tem que se fazer
+void undoMove(MatrizJogo * mj , LastMoveLL * lm);
+
 
 //Modulo userInterface.c
-void desenhaInterfaceJogo(GameSettings * gs,MatrizJogo mj); // tem que se fazer
+void desenhaInterfaceJogo(GameSettings * gs,MatrizJogo mj);
+void splashScreen(void);
+void animacaoVitoria(void);
+void mensagemSaida(void);
+void avisaJogadaInvalida(void);
+void desenhaMenuPrincipal(void);
 
 
 //Modulo freeMemory.c

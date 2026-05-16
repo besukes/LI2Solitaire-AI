@@ -63,7 +63,7 @@ void addCartasLinkedList(LastMoveLL novo , int indx , int num , MatrizJogo m){
 
 
 void headLinkedList(LastMoveLL * l , int indexAnterior, int indexNovo, int numCartasMovidas , MatrizJogo matriz){
-    LastMoveLL novo = malloc(sizeof(struct LastMoveLL));
+    LastMoveLL novo = malloc(sizeof(struct LastMoveLLNode));
     novo->indexPilhaAnterior = indexAnterior;
     novo->indexNovaPilha = indexNovo;
     novo->numCartasMovidas = numCartasMovidas;
