@@ -9,7 +9,7 @@ void initMatrizCartasJogo(int arrayCartas[],MatrizJogo * mj){
         int maxPilha = p->numCartasPilha;
         for(j=0 ;j  < maxPilha ; j++ , counter++){
             Carta * c = p->cartasPilha + j ;
-            c->naipe = convertToNaipe(arrayCartas[counter]/4);
+            c->naipe = convertToNaipe((arrayCartas[counter] -1)/13);
             c->valor = valorCarta(arrayCartas[counter]);
         }
     }
